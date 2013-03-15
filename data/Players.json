@@ -1,0 +1,8 @@
+getPlayerInfo({
+    “players”: [
+        {“name”: ”Bob”, “wins”: 0, “loses”:1, “played”:1 },
+        {“name”: ”Jill”, “wins”: 1, “loses”: 0, “played”: 1 },
+        {“name”: ”Bill”, “wins”: 0, “loses”: 1, “played”: 1 },
+        {“name”: ”Fred”, “wins”: 1, “loses”: 0, “played”: 1 }
+    ]
+});

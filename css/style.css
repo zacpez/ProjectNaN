@@ -32,11 +32,11 @@ footer, header, hgroup, menu, nav, section {
 
 @font-face {
 	font-family: "Amble";
-	src: url('http://fc.zacpez.com/font/Amble-Bold.ttf');
+	src: url('../font/Amble-Bold.ttf');
 }
 
 body {
-	background: url('http://fc.zacpez.com/images/Page-BgTexture.jpg');
+	background: url('../images/Page-BgTexture.jpg');
 	font-family: "Amble";
 	font-size: 200%;
 	line-height: 200%;
@@ -45,28 +45,40 @@ body {
 a { 
    text-decoration: none;
    text-align: center;
+	border-radius: 1em;
+	border: 2px #666666 solid;
 }
 
 span {
    margin: 1em;
    text-align: center;
+	
 }
 
 a.button{
-   background: #225E79;
-   color: #FFFFFF;
+   background-image: linear-gradient(bottom, rgb(19,52,66) 0%, rgb(34,94,121) 52%, rgb(57,138,173) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(19,52,66) 0%, rgb(34,94,121) 52%, rgb(57,138,173) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(19,52,66) 0%, rgb(34,94,121) 52%, rgb(57,138,173) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(19,52,66) 0%, rgb(34,94,121) 52%, rgb(57,138,173) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(19,52,66) 0%, rgb(34,94,121) 52%, rgb(57,138,173) 100%);
+	color: #FFFFFF;
 	text-shadow: rgba(0,0,0,.5) 1px 2px 1px;
    display: block;
    font: bold 1em;
    height: 2em;
    padding: 0.5em 3ex 0.5em 3ex;
    margin: 1em;
+	
 }
 
 a.button:hover{
-   background: #0772A1;
+	background-image: linear-gradient(bottom, rgb(126,214,163) 0%, rgb(49,135,109) 47%, rgb(33,85,79) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(126,214,163) 0%, rgb(49,135,109) 47%, rgb(33,85,79) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(126,214,163) 0%, rgb(49,135,109) 47%, rgb(33,85,79) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(126,214,163) 0%, rgb(49,135,109) 47%, rgb(33,85,79) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(126,214,163) 0%, rgb(49,135,109) 47%, rgb(33,85,79) 100%);
    color: #FFFFFF;
-	text-shadow: rgba(0,0,0,.5) 1px 2px 1px;
+	text-shadow: rgba(255,255,255,.5) 1px 2px 1px;
    display: block;
    font: bold 1em;
    height: 2em;
@@ -75,7 +87,7 @@ a.button:hover{
 }
 
 a.button:click{
-   background: #0772A1;
+   background: #225e79;
    color: #FFFFFF;
    display: block;
    font: bold 1em;

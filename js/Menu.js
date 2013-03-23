@@ -27,7 +27,7 @@ function Menu() {
 		this.ServerBrowser.css({display: "none"});
 		this.HighScores.css({display: "none"});
 		this.GameScreen.css({display: "none"});
-		this.loginDiv.css({display: "block"});
+		this.loginDiv.css({display: "none"});
 
 		this.Page1.css({display: "block"});
 		this.Page2.css({display: "none"});

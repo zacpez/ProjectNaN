@@ -2,11 +2,15 @@
 //
 //
 
-var http = require('http');
-var fs = require('fs');
+var app = require('http').createServer(webService).listen(81, '0.0.0.0'), 
+fs = require('fs'),
+io = require('socket.io');
+
+var gameservers = [];
+
 var path = require('path');
  
-var server = http.createServer(function (request, response) {
+function webService(request, response) {
     var filePath = '.' + request.url;
     if (filePath == './')
         filePath = './index.html';
@@ -59,4 +63,10 @@ var server = http.createServer(function (request, response) {
         }
     });
      
-}).listen(80, '0.0.0.0');
+}
+
+var newServerRequest = io.listen(app);
+	newServerRequest.sockets.on('connection', function (socket) {
+		socket.emit('new', {name: 'newGame'});
+	});
+

@@ -11,5 +11,6 @@ $(window).load(function () {
    var menu = new Menu();
    menu.init();
 
+	LocalStorage.init();
 });   
 

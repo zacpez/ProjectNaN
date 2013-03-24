@@ -36,7 +36,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 body {
-	background: url('../images/Page-BgTexture.jpg');
+	background: url('../images/Page-bg.png');
 	font-family: "Amble";
 	font-size: 200%;
 	line-height: 200%;

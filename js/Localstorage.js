@@ -2,12 +2,20 @@
 // Localstorage.js
 //
 
-var LocalStorage = function () {
+var LocalStorage = new function () {
    
+	this.init = function () {
+		Database.loadMap();
+	}
+	
    this.clear = function (){
       var theArray = new Array();
       localStorage.setItem("map", JSON.stringify(theArray));
    }
+	
+	this.set = function (key, value) {
+		localStorage.setItem(key, JSON.stringify(value));
+	}
 
    this.getArrayFromLocalStorage = function (key) {
       var theArray = localStorage.getItem(key);

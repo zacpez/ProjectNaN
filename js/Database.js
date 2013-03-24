@@ -2,18 +2,29 @@
 //
 //
 
-function Database() {
-
+var Database = new function () {
 	this.init = function () {
 		
 		return true;
 	}
 	
-   this.loadServers = function (url, page) {
+	this.loadMap = function () {
+		this.load("http://www.fc.zacpez.com/data/index.php", "World");
+	}
+	
+	this.loadServers = function () {
+		this.load("http://www.fc.zacpez.com/data/index.php", "Servers");
+	}
+	
+	this.loadPlayers = function () {
+		this.load("http://www.fc.zacpez.com/data/index.php", "Players");
+	}
+	
+   this.load = function (url, data) {
    
 		try {
 			var ajax = new XMLHttpRequest();
-			ajax.open("GET", url);
+			ajax.open("GET", url+'?access='+data);
 			ajax.overrideMimeType("text/javascript");		
 			ajax.onreadystatechange = function () {			
 				
@@ -21,7 +32,8 @@ function Database() {
 
 					if (ajax.status===200) {
 						console.log(ajax.responseText);
-						loadPage (ajax.responseText, page);	
+						// Do work herer
+						LocalStorage.set(data, JSON.parse(ajax.responseText));
 					} else {
 						alert (ajax.status +": "+ ajax.statusText);
 					}
@@ -37,33 +49,33 @@ function Database() {
 	this.addServer = function () {
 		var url = "addServer.php"+ "?random=" + (new Date()).getTime();	
 		
-			try
-			{
-				var ajax = new XMLHttpRequest();
-				
-				ajax.open("POST",url,true);
-				ajax.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		try
+		{
+			var ajax = new XMLHttpRequest();
+			
+			ajax.open("POST",url,true);
+			ajax.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 
-				ajax.onreadystatechange = function ()
-				{			
-					if( ajax.readyState === 4)
-					{
-						document.getElementById("bookid").value = "";
-						document.getElementById("amount").value = "";
-						// Confirm the addition of the sale entry
-						alert("The new sale entry was successfully added.");
-					
-					}		
-				}
-				ajax.send("&date=" + document.getElementById("date").value + 
-				"&bookid=" + document.getElementById("bookid").value +"&amount=" + document.getElementById("amount").value );
+			ajax.onreadystatechange = function ()
+			{			
+				if( ajax.readyState === 4)
+				{
+					document.getElementById("bookid").value = "";
+					document.getElementById("amount").value = "";
+					// Confirm the addition of the sale entry
+					alert("The new sale entry was successfully added.");
+				
+				}		
 			}
-			catch (e)
-			{
-				alert (e.message);
-			}
-		}	
-	}
+			ajax.send("&date=" + document.getElementById("date").value + 
+			"&bookid=" + document.getElementById("bookid").value +"&amount=" + document.getElementById("amount").value );
+		}
+		catch (e)
+		{
+			alert (e.message);
+		}
+	}	
+
 	
 	this.handleRefresh = function () {
 	

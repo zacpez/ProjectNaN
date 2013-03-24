@@ -42,6 +42,9 @@ function webService(request, response) {
 		case '.otf':
 			contentType = 'application/octet-stream';
 			break;
+		case '.php':
+			contentType = 'application/php';
+			break;
     }
      
     path.exists(filePath, function(exists) {

@@ -9,22 +9,22 @@ var Database = new function () {
 	}
 	
 	this.loadMap = function () {
-		this.load("http://www.fc.zacpez.com/data/index.php", "World");
+		this.load("data/World.json", "World");
 	}
 	
 	this.loadServers = function () {
-		this.load("http://www.fc.zacpez.com/data/index.php", "Servers");
+		this.load("data/Servers.php", "Servers");
 	}
 	
 	this.loadPlayers = function () {
-		this.load("http://www.fc.zacpez.com/data/index.php", "Players");
+		this.load("data/Players.php", "Players");
 	}
 	
    this.load = function (url, data) {
    
 		try {
 			var ajax = new XMLHttpRequest();
-			ajax.open("GET", url+'?access='+data);
+			ajax.open("GET", url);
 			ajax.overrideMimeType("text/javascript");		
 			ajax.onreadystatechange = function () {			
 				

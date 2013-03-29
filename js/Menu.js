@@ -1,9 +1,10 @@
 //
 // Menu.js
 //
+var currPage;
 
 function Menu() {
-	var self = this;
+	
    this.loginDiv = $("#loginpages");          //// Login Div
    this.Page1 = $("#page1");                  // Login Menu
    this.Page2 = $("#page2");                  // Login Page 
@@ -24,6 +25,8 @@ function Menu() {
 
 
    this.init = function () {
+      currPage = this.Page1;
+      var self = this;
 		this.ServerBrowser.css({display: "none"});
 		this.HighScores.css({display: "none"});
 		this.GameScreen.css({display: "none"});
@@ -35,28 +38,34 @@ function Menu() {
 		this.Page4.css({display: "none"});
 		
 		this.NewUser.click(function () {
-			self.Page1.css({display: "none"});
+			currPage.css({display: "none"});
 			self.Page2.css({display: "block"});
+         currPage = self.Page2;
 		});
 		this.ExistingUser.click(function () {
-			self.Page1.css({display: "none"});
+			currPage.css({display: "none"});
 			self.Page3.css({display: "block"});
+         currPage = self.Page3;
 		});
 		this.LoginUser.click(function () {
-			self.loginDiv.css({display: "none"});
+			currPage.css({display: "none"});
 			self.ServerBrowser.css({display: "block"});
+         currPage = self.ServerBrowser;
 		});
 		this.ForgotUser.click(function () {
-			self.Page3.css({display: "none"});
+			currPage.css({display: "none"});
 			self.Page4.css({display: "block"});
+         currPage = self.Page4;
 		});
 		this.RecoverUser.click(function () {
-			self.Page4.css({display: "none"});
+			currPage.css({display: "none"});
 			self.Page1.css({display: "block"});
+         currPage = self.Page1;
 		});
 		this.LoginExistUser.click(function () {
-			self.loginDiv.css({display: "none"});
+			currPage.css({display: "none"});
 			self.ServerBrowser.css({display: "block"});
+         currPage = self.ServerBrowser;
 		});
    }
 }

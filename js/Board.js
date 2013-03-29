@@ -6,9 +6,11 @@ var GameBoard = function() {
 	// The current list of objects
 	this.objects = [];
 	this.objTypeCounts = [];
-	
+
+	this.map = [];
 	this.loadMap = function () {
-		
+		this.map = LocalStorage.getArrayFromLocalStorage("World");
+      console.log("hello");
 	}
 	
 	// Add a new object to the object list

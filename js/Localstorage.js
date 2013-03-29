@@ -6,6 +6,7 @@ var LocalStorage = new function () {
    
 	this.init = function () {
 		Database.loadMap();
+      Game.board.loadMap();
 	}
 	
    this.clear = function (){

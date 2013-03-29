@@ -2,7 +2,7 @@
 //
 //
 
-var app = require('http').createServer(webService).listen(81, '0.0.0.0'), 
+var app = require('http').createServer(webService).listen(9081, '0.0.0.0'), 
 fs = require('fs'),
 io = require('socket.io');
 
@@ -42,9 +42,6 @@ function webService(request, response) {
 		case '.otf':
 			contentType = 'application/octet-stream';
 			break;
-		case '.php':
-			contentType = 'application/php';
-			break;
     }
      
     path.exists(filePath, function(exists) {
@@ -59,8 +56,7 @@ function webService(request, response) {
                     response.end(content, 'utf-8');
                 }
             });
-        }
-        else {
+        } else {
             response.writeHead(404);
             response.end();
         }
@@ -68,8 +64,25 @@ function webService(request, response) {
      
 }
 
-var newServerRequest = io.listen(app);
-	newServerRequest.sockets.on('connection', function (socket) {
-		socket.emit('new', {name: 'newGame'});
-	});
+var socketio = io.listen(app);
+
+socketio.sockets.on('connection', function (socket) { socketEventHandler(socket)} );
+
+function socketEventHandler(socket) {
+
+	      // added character
+      socket.on('req_character_add', function (characterObj) {
+		   webService.socketio.sockets.emit('resp_chracter_add', characterObj);
+	   });
+
+      // moved character_add
+      socket.on('req_character_move', function (characterObj) {
+		   webService.socketio.sockets.emit('resp_chracter_kill', characterObj);
+	   });
+
+      // killed character_add
+      socket.on('req_character_kill', function (characterObj) {
+		   webService.socketio.sockets.emit('resp_chracter_kill', characterObj);
+	   });
+}
 

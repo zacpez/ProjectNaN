@@ -63,7 +63,8 @@ var sprites = {
 	16: { sx: 320, sy: 64, w: 64, h: 64, frames: 1 },								// path
 	11: { sx: 256, sy: 128, w: 64, h: 64, frames: 1 },								//	path2 was 17
 	13: { sx: 320, sy: 128, w: 64, h: 64, frames: 1 },								// pebel
-	player: { sx: 448, sy: 128, w: 32, h: 32, frames: 1 },							// Player
+	player: { sx: 448, sy: 128, w: 32, h: 32, frames: 1 },
+   deadplayer: { sx: 480, sy: 128, w: 32, h: 32, frames: 1 },							// Player
 	17: { sx: 256, sy: 192, w: 64, h: 64, frames: 1 },								// road
 	12: { sx: 384, sy: 64, w: 64, h: 64, frames: 1 },								// sand
 	31: { sx: 448, sy: 0, w: 64, h: 64, frames: 1 },					// topleft_tinroof
@@ -84,7 +85,7 @@ var Game = new function () {
 	this.gameCam = {x: 2100, y: 900, w: 0, h: 0, cols: 0, rows: 0, sc: 0, sr: 0, vx: 0, vy: 0};
    this.oldRelPos = { x: 0, y: 0 };
 	this.clicking = false;
-
+   this.dragging = false;
 	this.setScreen = function(num, screen) { Game.screens[num] = screen; };
 
    this.relMousePos = function (event) {
@@ -104,8 +105,8 @@ var Game = new function () {
 		this.canvas = this.canvasOuter.getContext && this.canvasOuter.getContext('2d');
 		if(!this.canvas) { return alert("Please upgrade your browser to play"); }
 		
-		this.width = this.canvas.canvas.width = window.innerWidth;
-		this.height = this.canvas.canvas.height = window.innerHeight;
+		this.width = this.canvas.canvas.width = window.innerWidth*0.9;
+		this.height = this.canvas.canvas.height = window.innerHeight*0.9;
 		this.gameCam.w = this.width;
 		this.gameCam.h = this.height;
 		this.gameCam.cols = Math.floor(this.width/64)+2;
@@ -115,34 +116,57 @@ var Game = new function () {
 
       this.board = new GameBoard();
       this.characters = new GameBoard();
+      this.messages = new GameBoard();
 
 		$(Game.canvasOuter).mousedown( function (event) {
+         console.log('down');
          Game.clicking = true;
          var mouse = Game.relMousePos(event);
          Game.oldRelPos.x = mouse.x;
          Game.oldRelPos.y = mouse.y;
+         $(Game.canvasOuter).mousemove( function (event) {
+            console.log('and moving');
+            Game.dragging = true;
+            if (Game.dragging) {
+               var mouse = Game.relMousePos(event);
+               Game.gameCam.ox = -( 64 + Game.gameCam.x%64);
+               Game.gameCam.oy = -( 64 + Game.gameCam.y%64);
+               Game.gameCam.vx = (mouse.x - Game.oldRelPos.x);
+               Game.gameCam.vy = (mouse.y - Game.oldRelPos.y);
+			      Game.gameCam.x = Game.gameCam.x - Game.gameCam.vx;
+               Game.gameCam.y = Game.gameCam.y - Game.gameCam.vy;
+               Game.gameCam.sc = Math.floor(Game.gameCam.x/64)-2;
+		         Game.gameCam.sr = Math.floor(Game.gameCam.y/64)-2; 
+               Game.oldRelPos.x = mouse.x;
+               Game.oldRelPos.y = mouse.y;
+               //console.log("X: " + Game.gameCam.x + ", Y: " + Game.gameCam.y);
+            } 
+         });
+         if (!Game.dragging) {
+            var mouse = Game.relMousePos(event);
+            var ox = mouse.x - mouse.x%64;
+            var oy = mouse.y - mouse.y%64;
+            var col = Math.floor(Game.gameCam.sc + mouse.x/64);
+            var row = Math.floor(Game.gameCam.sr + mouse.y/64);
+            Game.canvas.fillRect(ox,oy,64,64); //Draws a rectangular outline
+         } 
       });
 
 		$(Game.canvasOuter).mousemove( function (event) {
-         if (Game.clicking) {
-            var mouse = Game.relMousePos(event);
-            //Game.gameCam.ox = -( 64 + Game.gameCam.x%64);
-            //Game.gameCam.oy = -( 64 + Game.gameCam.y%64);
-            Game.gameCam.vx = (mouse.x - Game.oldRelPos.x);
-            Game.gameCam.vy = (mouse.y - Game.oldRelPos.y);
-			   Game.gameCam.x = Game.gameCam.x - Game.gameCam.vx;
-            Game.gameCam.y = Game.gameCam.y - Game.gameCam.vy;
-            Game.gameCam.sc = Math.floor(Game.gameCam.x/64)-2;
-		      Game.gameCam.sr = Math.floor(Game.gameCam.y/64)-2; 
-            Game.oldRelPos.x = mouse.x;
-            Game.oldRelPos.y = mouse.y;
-            console.log("X: " + Game.gameCam.x + ", Y: " + Game.gameCam.y);
-         } else {
-            //other event while not clicking left mouse button
-         }
+            console.log('UP');
+         //other event while not clicking left mouse button
+         var mouse = Game.relMousePos(event);
+         var ox = mouse.x - mouse.x%64;
+         var oy = mouse.y - mouse.y%64;
+         var col = Math.floor(Game.gameCam.sc + mouse.x/64);
+         var row = Math.floor(Game.gameCam.sr + mouse.y/64);
+         Game.canvas.strokeRect(ox,oy,64,64); //Draws a rectangular outline
+         //console.log("col: " + col + ", row: " + row);
 		});
 		$(Game.canvasOuter).mouseup( function (event) {
 	      Game.clicking = false;
+         Game.dragging = false;
+         //$(document).unbind('mousemove');
          Game.gameCam.vx = 0;
          Game.gameCam.vy = 0;
 		});
@@ -166,8 +190,7 @@ var Game = new function () {
 	}; 
 };
 
-var playGame = function() {
-		Game.setScreen(2,new TitleScreen("Game Started", "Place your characters"));
+var playGame = function(oldMsg) {
 		
 		/*for(var i= Game.gameCam.sc; i < Game.gameCam.sc + Game.gameCam.cols; i++) {
 			for(var j = Game.gameCam.sr; j < Game.gameCam.sr + Game.gameCam.rows; j++) {
@@ -178,40 +201,44 @@ var playGame = function() {
 				Game.board.add(new Tile(Game.board.map[i][j], x, y, row, col));
 			}
 		}*/
-      for(var i= 0; i < 99; i++) {
-			for(var j = 0; j < 199; j++) {
-            var x = (-( 64 + Game.gameCam.x%64))+((i-Game.gameCam.sc)*64);
-            var y = (-( 64 + Game.gameCam.y%64))+((j-Game.gameCam.sr)*64);
-            
-				Game.board.add(new Tile(Game.board.map[i][j], x, y, i, j));
-            if (Game.board.map[i][j] == 2 && Math.random() > 0.9) {
-               Game.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
-            }
-            if (Game.board.map[i][j] == 3 && Math.random() > 0.99) {
-               Game.board.add(new Tile('bush', x, y, i, j));
-            } else if (Game.board.map[i][j] == 3 && Math.random() > 0.7) {
-               Game.board.add(new Tile('grass', x, y, i, j));
-            }
-            if (Game.board.map[i][j] == 1 && Math.random() > 0.99) {
-               Game.board.add(new Tile('rock', x, y, i, j));
-            } else if (Game.board.map[i][j] == 1 && Math.random() > 0.95) {
-               Game.board.add(new Tile('smallrock', x, y, i, j));
-            }
-            if (Game.board.map[i][j] == 11 && Math.random() > 0.1) {
-               Game.board.add(new Tile('wheat', x, y, i, j));
-            }
-			}
-		}
 		
 		Game.setScreen(5,Game.board); 
-
+      Game.messages.markToRemove(oldMsg);
+      Game.messages.add(new TitleScreen("Game Started", "Place your 5 characters"));
+      Game.setScreen(30,Game.messages);
 	};
 
 var startGame = function() {
 	var board = new GameBoard(); 
    board.loadMap();
-	Game.setScreen(2,new TitleScreen("Project NaN","Click to start playing",playGame));	
-	//SpriteSheet.draw(Game.ctx,"ship",100,100);
+   
+   for(var i= 0; i < 99; i++) {
+		for(var j = 0; j < 199; j++) {
+         var x = (-( 64 + Game.gameCam.x%64))+((i-Game.gameCam.sc)*64);
+         var y = (-( 64 + Game.gameCam.y%64))+((j-Game.gameCam.sr)*64);
+         
+			Game.board.add(new Tile(Game.board.map[i][j], x, y, i, j));
+         if (Game.board.map[i][j] == 2 && Math.random() > 0.9) {
+            Game.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+         }
+         if (Game.board.map[i][j] == 3 && Math.random() > 0.99) {
+            Game.board.add(new Tile('bush', x, y, i, j));
+         } else if (Game.board.map[i][j] == 3 && Math.random() > 0.7) {
+            Game.board.add(new Tile('grass', x, y, i, j));
+         }
+         if (Game.board.map[i][j] == 1 && Math.random() > 0.99) {
+            Game.board.add(new Tile('rock', x, y, i, j));
+         } else if (Game.board.map[i][j] == 1 && Math.random() > 0.95) {
+            Game.board.add(new Tile('smallrock', x, y, i, j));
+         }
+         if (Game.board.map[i][j] == 11 && Math.random() > 0.1) {
+            Game.board.add(new Tile('wheat', x, y, i, j));
+         }
+		}
+	}
+Game.setScreen(5,Game.board); 
+	Game.messages.add(new TitleScreen("Project NaN","Click to start playing",playGame));	
+   Game.setScreen(30,Game.messages);
 }
 
 window.addEventListener("load", function() {

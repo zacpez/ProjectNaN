@@ -13,7 +13,7 @@ var Database = new function () {
 	}
 	
 	this.loadServers = function () {
-		this.load("data/Servers.php", "Servers");
+		this.load("data/Servers.json", "Servers");
 	}
 	
 	this.loadPlayers = function () {

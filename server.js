@@ -72,17 +72,17 @@ function socketEventHandler(socket) {
 
 	      // added character
       socket.on('req_character_add', function (characterObj) {
-		   webService.socketio.sockets.emit('resp_chracter_add', characterObj);
+		   webService.socketio.sockets.emit('resp_character_add', characterObj);
 	   });
 
       // moved character_add
       socket.on('req_character_move', function (characterObj) {
-		   webService.socketio.sockets.emit('resp_chracter_kill', characterObj);
+		   webService.socketio.sockets.emit('resp_character_move', characterObj);
 	   });
 
       // killed character_add
       socket.on('req_character_kill', function (characterObj) {
-		   webService.socketio.sockets.emit('resp_chracter_kill', characterObj);
+		   webService.socketio.sockets.emit('resp_character_kill', characterObj);
 	   });
 }
 

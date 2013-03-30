@@ -7,7 +7,7 @@ var TitleScreen = function  (title, subtitle, callback)
 	
 	this.update = function(dt) {
 		if(Game.clicking && this.callback) 
-			this.callback();
+			this.callback(this);
 	};
 
 	this.draw = function(ctx) {

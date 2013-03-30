@@ -122,6 +122,81 @@ section {
    text-align: center;
 }
 
+table{
+   width: 100%;
+   border-collapse:collapse;
+}
+
+thead{
+       background-image: linear-gradient(bottom, rgba(2,8,25,0.3) 0%, rgba(67,85,120,0.5) 52%, rgba(123,155,219,0.7) 100%);
+   background-image: -o-linear-gradient(bottom, rgba(2,8,25,0.3) 0%, rgba(67,85,120,0.5) 52%, rgba(123,155,219,0.7) 100%);
+   background-image: -moz-linear-gradient(bottom, rgba(2,8,25,0.3) 0%, rgba(67,85,120,0.5) 52%, rgba(123,155,219,0.7) 100%);
+   background-image: -webkit-linear-gradient(bottom, rgba(2,8,25,0.3) 0%, rgba(67,85,120,0.5) 52%, rgba(123,155,219,0.7) 100%);
+   background-image: -ms-linear-gradient(bottom, rgba(2,8,25,0.3) 0%, rgba(67,85,120,0.5) 52%, rgba(123,155,219,0.7) 100%);
+   color:#FFFFFF;
+}
+
+th:hover{
+    background-image: linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -o-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -moz-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -webkit-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -ms-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+    text-shadow: rgba(255,255,255,.8) 0px 0px 15px;
+    color:#FFFFFF;
+}
+
+tr{
+    border-bottom-width: 1px;
+}
+
+tr.row1 {
+    background:rgba(90,114,163,0.7);
+    border-bottom-style: solid ; 
+    border-bottom-color: black; 
+    border-bottom-width: 1px;
+}
+
+tr.row1:hover {
+       background-image: linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -o-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -moz-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -webkit-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -ms-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+    text-shadow: rgba(255,255,255,1) 0px 0px 15px;
+   border-bottom-color: white; 
+   border-bottom-width: 1px;
+}
+
+tr.row2 {
+   background:rgba(123,155,219,0.7);
+   border-bottom-style: solid ; 
+   border-bottom-color: black; 
+   border-bottom-width: 1px;
+}
+
+tr.row2:hover {
+       background-image: linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -o-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -moz-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -webkit-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -ms-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+    text-shadow: rgba(255,255,255,1) 0px 0px 15px;
+   border-bottom-color: white; 
+   border-bottom-width: 1px;
+}
+
+tr.highlight {
+       background-image: linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -o-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -moz-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -webkit-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+   background-image: -ms-linear-gradient(bottom, rgba(2,8,25,0.5) 0%, rgba(67,85,120,0.7) 52%, rgba(123,155,219,0.9) 100%);
+    text-shadow: rgba(255,255,255,1) 0px 0px 15px;
+   border-bottom-color: white; 
+   border-bottom-width: 1px;
+}
+
 canvas#game {
    width: 100%;
    height: 100%;

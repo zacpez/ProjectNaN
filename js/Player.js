@@ -1,15 +1,27 @@
 
-var Player = new function () {
+var Player = new function (name) {
    var self = this;
+   this.name = name;
    this.characters = [];
    this.movements = [];
+   this.isWarlord = 1;
 
    this.init = function () {
       self.setMovements();
    }
 
-   this.addCharacter = function () {
-      Game.setScreen(10, new Character())
+   this.warlord = function () {
+      if (isWarlord === 1){
+         isWarlord = 0;
+         return 1;
+      } else { 
+         return 0;
+      }
+   }
+
+   this.addCharacter = function (col, row, warlord) {
+      Game.characters.add(new Character(col, row, self.name, warlord));
+      Game.setScreen(10, Game.characters);
    }
 
    this.setMovements = function () {

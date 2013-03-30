@@ -3,10 +3,12 @@
 //
 
 var LocalStorage = new function () {
+   this.servers = [];
    
 	this.init = function () {
 		Database.loadMap();
       Game.board.loadMap();
+      Database.loadServers();
 	}
 	
    this.clear = function (){

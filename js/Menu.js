@@ -120,6 +120,7 @@ function Menu() {
 		this.LoginUser.click(function () {
 			currPage.css({display: "none"});
 			self.ServerBrowser.css({display: "block"});
+         Game.player.name = $('#newusername').value;
          currPage = self.SBR;
 		});
 		this.ForgotUser.click(function () {
@@ -135,6 +136,7 @@ function Menu() {
 		this.LoginExistUser.click(function () {
 			currPage.css({display: "none"});
 			self.ServerBrowser.css({display: "block"});
+         Game.player.name = $('#existuser').value;
          currPage = self.SBR;
 		});
       this.ExistingServer.click(function () {

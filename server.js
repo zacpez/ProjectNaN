@@ -4,7 +4,13 @@
 
 var app = require('http').createServer(webService).listen(9081, '0.0.0.0'), 
 fs = require('fs'),
-io = require('socket.io');
+io = require('socket.io'),
+game = require('./gameserver');
+
+//var Game = game(4, 4, 7);
+//console.log("Game: " + Game);
+//console.log("Game.init: " + Game.init);
+//Game.init();
 
 var gameservers = [];
 
@@ -70,19 +76,55 @@ socketio.sockets.on('connection', function (socket) { socketEventHandler(socket)
 
 function socketEventHandler(socket) {
 
-	      // added character
-      socket.on('req_character_add', function (characterObj) {
-		   webService.socketio.sockets.emit('resp_character_add', characterObj);
+      // Ping players for connection
+      socket.emit('ping', function (characterObj) {
+		   socketio.sockets.emit('resp_character_add', characterObj);
 	   });
 
-      // moved character_add
-      socket.on('req_character_move', function (characterObj) {
-		   webService.socketio.sockets.emit('resp_character_move', characterObj);
+      // Ping responses
+      socket.on('playing', function (characterObj) {
+		   // Maintain game
+	   });
+      socket.on('disconnected', function (characterObj) {
+		   // Update Game
 	   });
 
-      // killed character_add
-      socket.on('req_character_kill', function (characterObj) {
-		   webService.socketio.sockets.emit('resp_character_kill', characterObj);
+      // New server creation
+      socket.on('create_server', function (characterObj) {
+		   socketio.sockets.emit('created_server', characterObj);
 	   });
+
+      // New player creation
+      socket.on('add_player', function (playerObj) {
+         //game.newPlayer(playerObj);
+		   socketio.sockets.emit('created_server', palyersObj);
+	   });
+
+      // Join a current server
+      socket.on('join_server', function (characterObj) {
+		   socketio.sockets.emit('joined_server', characterObj);
+	   });
+
+	   // Added character
+      socket.on('add_character', function (characterObj) {
+		   socketio.sockets.emit('resp_character_add', characterObj);
+	   });
+
+      // Moved character_add
+      socket.on('move_character', function (characterObj) {
+		   socketio.sockets.emit('resp_character_move', characterObj);
+	   });
+
+      // Killed character_add
+      socket.on('kill_character', function (characterObj) {
+		   socketio.sockets.emit('killed_character', characterObj);
+	   });
+
+      // Equipt character_add
+      socket.on('equipt_character', function (characterObj) {
+		   socketio.sockets.emit('equipted_character', characterObj);
+	   });
+
+      
 }
 

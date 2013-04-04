@@ -1,5 +1,5 @@
 
-var Player = new function (name) {
+var Player = function (name) {
    var self = this;
    this.name = name;
    this.characters = [];
@@ -24,33 +24,11 @@ var Player = new function (name) {
       Game.setScreen(10, Game.characters);
    }
 
-   this.setMovements = function () {
-      for (var i = 0; i < 9; i++) {
-         for (var i = 0; i < 9; i++) {
-            this.movements[x][y] = 0;
-         }
-      }
-      this.movements
-      for (var i = 0; i < 5; i++){
-         var x = Math.round(Math.random()*8);
-         var y = Math.round(Math.random()*8);
-         if (this.movements[x][y] === 0){
-            this.movements[x][y] = 1;
-         }
-      }
-      for (var i = 0; i < 5; i++){
-         var x = Math.round(Math.random()*8);
-         var y = Math.round(Math.random()*8);
-         if (this.movements[x][y] === 0){
-            this.movements[x][y] = 2;
-         }
-      }
-      for (var i = 0; i < 5; i++){
-         var x = Math.round(Math.random()*8);
-         var y = Math.round(Math.random()*8);
-         if (this.movements[x][y] === 0){
-            this.movements[x][y] = 3;
-         }
-      }
+   this.setPath = function () {
+      // setup a set of movement that are to be sent to the server
+   }
+
+   this.setMovements = function (col, row) {
+      // Use websockets to get the movement board 
    }
 }

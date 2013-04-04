@@ -72,17 +72,23 @@ var sprites = {
 	34: { sx: 384, sy: 192, w: 64, h: 64, frames: 1 },
    28: { sx: 384, sy: 128, w: 64, h: 64, frames: 1 },		      //verticalsection_tinroof 
    tree: {sx: 0, sy: 256 , w: 128, h: 128, frames: 1},
+   tree2: {sx: 0, sy: 384 , w: 128, h: 128, frames: 1},
    grass: {sx: 448, sy: 192 , w: 64, h: 64, frames: 1},
    bush: {sx: 448, sy: 256 , w: 64, h: 64, frames: 1},
+   bush2: {sx: 448, sy: 320 , w: 64, h: 64, frames: 1},
    rock: {sx: 384, sy: 256 , w: 64, h: 64, frames: 1}, 
    smallrock: {sx: 320, sy: 256 , w: 64, h: 64, frames: 1},
-   wheat: {sx: 256, sy: 256 , w: 64, h: 64, frames: 1} 
+   wheat: {sx: 256, sy: 256 , w: 64, h: 64, frames: 1},
+   rope: {sx: 128, sy: 256 , w: 64, h: 64, frames: 1},
+   boots: {sx: 192, sy: 256 , w: 64, h: 64, frames: 1},
+   boat: {sx: 128, sy: 320 , w: 64, h: 64, frames: 1},
+   weapons: {sx: 192, sy: 320 , w: 64, h: 64, frames: 1}
 }
 
 var Game = new function () {
 
    this.screens = [];	
-	this.gameCam = {x: 2100, y: 900, w: 0, h: 0, cols: 0, rows: 0, sc: 0, sr: 0, vx: 0, vy: 0};
+	this.gameCam = {x: 1920, y: 900, w: 0, h: 0, cols: 0, rows: 0, sc: 0, sr: 0, vx: 0, vy: 0};
    this.oldRelPos = { x: 0, y: 0 };
 	this.clicking = false;
    this.dragging = false;
@@ -105,68 +111,89 @@ var Game = new function () {
 		this.canvas = this.canvasOuter.getContext && this.canvasOuter.getContext('2d');
 		if(!this.canvas) { return alert("Please upgrade your browser to play"); }
 		
-		this.width = this.canvas.canvas.width = window.innerWidth*0.9;
-		this.height = this.canvas.canvas.height = window.innerHeight*0.9;
+		this.width = this.canvas.canvas.width = window.innerWidth;
+		this.height = this.canvas.canvas.height = window.innerHeight;
 		this.gameCam.w = this.width;
 		this.gameCam.h = this.height;
 		this.gameCam.cols = Math.floor(this.width/64)+2;
 		this.gameCam.rows = Math.floor(this.height/64)+4;
       this.gameCam.sc = Math.floor(Game.gameCam.x/64)-2;
 		this.gameCam.sr = Math.floor(Game.gameCam.y/64)-2; 
-
+      this.counter = 0;
       this.board = new GameBoard();
-      this.characters = new GameBoard();
+      this.player = new Player();
+      this.players = new GameBoard();
       this.messages = new GameBoard();
+      this.socket = io.connect('http://localhost:9081');
 
+      $(Game.canvasOuter).bind("contextmenu",function(e){
+              return false;
+      });
 		$(Game.canvasOuter).mousedown( function (event) {
-         console.log('down');
-         Game.clicking = true;
-         var mouse = Game.relMousePos(event);
-         Game.oldRelPos.x = mouse.x;
-         Game.oldRelPos.y = mouse.y;
-         $(Game.canvasOuter).mousemove( function (event) {
-            console.log('and moving');
+         event.preventDefault();
+         if (event.which === 3) {
             Game.dragging = true;
-            if (Game.dragging) {
-               var mouse = Game.relMousePos(event);
-               Game.gameCam.ox = -( 64 + Game.gameCam.x%64);
-               Game.gameCam.oy = -( 64 + Game.gameCam.y%64);
-               Game.gameCam.vx = (mouse.x - Game.oldRelPos.x);
-               Game.gameCam.vy = (mouse.y - Game.oldRelPos.y);
-			      Game.gameCam.x = Game.gameCam.x - Game.gameCam.vx;
-               Game.gameCam.y = Game.gameCam.y - Game.gameCam.vy;
-               Game.gameCam.sc = Math.floor(Game.gameCam.x/64)-2;
-		         Game.gameCam.sr = Math.floor(Game.gameCam.y/64)-2; 
-               Game.oldRelPos.x = mouse.x;
-               Game.oldRelPos.y = mouse.y;
-               //console.log("X: " + Game.gameCam.x + ", Y: " + Game.gameCam.y);
-            } 
-         });
-         if (!Game.dragging) {
             var mouse = Game.relMousePos(event);
-            var ox = mouse.x - mouse.x%64;
-            var oy = mouse.y - mouse.y%64;
+            Game.oldRelPos.x = mouse.x;
+            Game.oldRelPos.y = mouse.y;
+
+         } else if (event.which === 1) {
+            Game.clicking = true;
+            var mouse = Game.relMousePos(event);
+            var ox = mouse.x - mouse.x%64 + Game.gameCam.ox;
+            var oy = mouse.y - mouse.y%64 + Game.gameCam.oy;
             var col = Math.floor(Game.gameCam.sc + mouse.x/64);
             var row = Math.floor(Game.gameCam.sr + mouse.y/64);
             Game.canvas.fillRect(ox,oy,64,64); //Draws a rectangular outline
          } 
       });
+      $(Game.canvasOuter).mousemove( function (event) {
+         event.preventDefault();
+         if (Game.dragging) {
+            var mouse = Game.relMousePos(event);
+            Game.gameCam.ox = -( 64 + Game.gameCam.x%64);
+            Game.gameCam.oy = -( 64 + Game.gameCam.y%64);
+            Game.gameCam.vx = (mouse.x - Game.oldRelPos.x);
+            Game.gameCam.vy = (mouse.y - Game.oldRelPos.y);
+		      Game.gameCam.x = Game.gameCam.x - Game.gameCam.vx;
+            Game.gameCam.y = Game.gameCam.y - Game.gameCam.vy;
+            Game.gameCam.sc = Math.floor(Game.gameCam.x/64)-2;
+	         Game.gameCam.sr = Math.floor(Game.gameCam.y/64)-2; 
+            Game.oldRelPos.x = mouse.x;
+            Game.oldRelPos.y = mouse.y;
+            console.log("X: " + Game.gameCam.x + ", Y: " + Game.gameCam.y);
+         } else if (Game.clicking) {
+            // Start to build path
+            //other event while not clicking left mouse button
+            var mouse = Game.relMousePos(event);
+            var ox = mouse.x - mouse.x%64;
+            var oy = mouse.y - mouse.y%64;
+            var col = Math.floor(Game.gameCam.sc + mouse.x/64);
+            var row = Math.floor(Game.gameCam.sr + mouse.y/64);
+            Game.canvas.fillRect(ox,oy,64,64);
+         } else {
+            //other event while not clicking left mouse button
+            var mouse = Game.relMousePos(event);
+            var ox = (mouse.x + Math.abs(Game.gameCam.x%64 - 64)) - mouse.x%64;
+            var oy = (mouse.y + Math.abs(Game.gameCam.y%64 - 64)) - mouse.y%64;
+            var col = Math.floor(Game.gameCam.sc + mouse.x/64);
+            var row = Math.floor(Game.gameCam.sr + mouse.y/64);
+            Game.canvas.strokeRect(ox,oy,64,64); //Draws a rectangular outline
+            console.log("col: " + col + ", row: " + row);
+         }
+      });
 
-		$(Game.canvasOuter).mousemove( function (event) {
-            console.log('UP');
-         //other event while not clicking left mouse button
-         var mouse = Game.relMousePos(event);
-         var ox = mouse.x - mouse.x%64;
-         var oy = mouse.y - mouse.y%64;
-         var col = Math.floor(Game.gameCam.sc + mouse.x/64);
-         var row = Math.floor(Game.gameCam.sr + mouse.y/64);
-         Game.canvas.strokeRect(ox,oy,64,64); //Draws a rectangular outline
-         //console.log("col: " + col + ", row: " + row);
-		});
 		$(Game.canvasOuter).mouseup( function (event) {
+         event.preventDefault();
+         if (event.which === 1 && Game.players.length < Game.maxcharacters) {
+            // Add a character and send it through the sockets
+            
+         } else if (event.which === 1) {
+            // Submit move given character here
+         }
+
 	      Game.clicking = false;
          Game.dragging = false;
-         //$(document).unbind('mousemove');
          Game.gameCam.vx = 0;
          Game.gameCam.vy = 0;
 		});
@@ -191,26 +218,21 @@ var Game = new function () {
 };
 
 var playGame = function(oldMsg) {
-		
-		/*for(var i= Game.gameCam.sc; i < Game.gameCam.sc + Game.gameCam.cols; i++) {
-			for(var j = Game.gameCam.sr; j < Game.gameCam.sr + Game.gameCam.rows; j++) {
-            var col = i+Game.gameCam.sc;
-            var row = j+Game.gameCam.sr;
-            var x = (-( 64 + Game.gameCam.x%64))+((i-Game.gameCam.sc)*64);
-            var y = (-( 64 + Game.gameCam.y%64))+((j-Game.gameCam.sr)*64);
-				Game.board.add(new Tile(Game.board.map[i][j], x, y, row, col));
-			}
-		}*/
-		
-		Game.setScreen(5,Game.board); 
-      Game.messages.markToRemove(oldMsg);
-      Game.messages.add(new TitleScreen("Game Started", "Place your 5 characters"));
-      Game.setScreen(30,Game.messages);
-	};
+
+	Game.setScreen(5,Game.board); 
+   Game.messages.markToRemove(oldMsg);
+   Game.messages.add(new TitleScreen("Game Started", "Place your 5 characters"));
+   Game.setScreen(30,Game.messages);
+};
 
 var startGame = function() {
 	var board = new GameBoard(); 
    board.loadMap();
+
+   // New player added here, data gathered and organized
+   Game.players = Game.socket.emit('add_player', {player: JSON.stringify(Game.player)});
+
+   
    
    for(var i= 0; i < 99; i++) {
 		for(var j = 0; j < 199; j++) {
@@ -218,26 +240,40 @@ var startGame = function() {
          var y = (-( 64 + Game.gameCam.y%64))+((j-Game.gameCam.sr)*64);
          
 			Game.board.add(new Tile(Game.board.map[i][j], x, y, i, j));
+         Game.counter += 1;
          if (Game.board.map[i][j] == 2 && Math.random() > 0.9) {
             Game.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+            Game.counter += 1;
+         } else if (Game.board.map[i][j] == 2 && Math.random() > 0.9) {
+         Game.board.add(new Tile('tree2', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+            Game.counter += 1;
          }
          if (Game.board.map[i][j] == 3 && Math.random() > 0.99) {
             Game.board.add(new Tile('bush', x, y, i, j));
+            Game.counter += 1;
+         } else if (Game.board.map[i][j] == 3 && Math.random() > 0.99) {
+            Game.board.add(new Tile('bush2', x, y, i, j));
+            Game.counter += 1;
          } else if (Game.board.map[i][j] == 3 && Math.random() > 0.7) {
             Game.board.add(new Tile('grass', x, y, i, j));
+            Game.counter += 1;
          }
          if (Game.board.map[i][j] == 1 && Math.random() > 0.99) {
             Game.board.add(new Tile('rock', x, y, i, j));
+            Game.counter += 1;
          } else if (Game.board.map[i][j] == 1 && Math.random() > 0.95) {
             Game.board.add(new Tile('smallrock', x, y, i, j));
+            Game.counter += 1;
          }
          if (Game.board.map[i][j] == 11 && Math.random() > 0.1) {
             Game.board.add(new Tile('wheat', x, y, i, j));
+            Game.counter += 1;
          }
 		}
 	}
-Game.setScreen(5,Game.board); 
-	Game.messages.add(new TitleScreen("Project NaN","Click to start playing",playGame));	
+   console.log(Game.counter);
+   Game.setScreen(5,Game.board); 
+	Game.messages.add(new TitleScreen("Project NaN","Left click to start playing",playGame));	
    Game.setScreen(30,Game.messages);
 }
 

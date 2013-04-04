@@ -104,7 +104,6 @@ var Tile = function(texture, x, y, r, c) {
       } else { */     
       this.x = this.x + Game.gameCam.vx*8;
       this.y = this.y + Game.gameCam.vy*8;
-      
       if (this.texture == 20) {
         // animate water here
       }   

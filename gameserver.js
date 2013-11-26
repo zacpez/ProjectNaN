@@ -1,4 +1,57 @@
+var Socket = require('./Socket');
 
+var GameServer = function () {
+	this.socket;
+	this.rooms = [];
+	this.players = [];
+}
+
+GameServer.prototype = {
+	initialize: function (){
+		console.log( "Game Server Started..");
+		this.socket = new Socket();
+	},
+
+	createMasterServer: function ( webServive ){
+		this.socket.initialize( webService );
+	},
+
+	addPlayer: function ( player ){
+		this.players[player.name] = player;
+	},
+
+	removePlayer: function ( playerName ){
+		this.players.remove( palyerName );
+	},
+
+	getPlayer: function ( playerName ){
+		return this.players[playerName];
+	},
+
+	getPlayerList: function () {
+		return this.players;
+	}
+
+	getRoom: function ( roomName ){
+		return this.rooms[roomName];
+	},
+
+	getRoomList: function (){
+		return this.rooms;
+	},
+	
+	addRoom: function ( room ){
+		this.rooms[room.name] = room;
+	},
+	
+	removeRoom: function ( roomName ){
+		this.rooms.remove( roomName );
+	}
+};
+	
+var Game = function () {
+	
+}
 var Game = new function (maxplayers, maxcharacters, movementDistance) {
    var rules = this;
    this.currentPlayer = 0;

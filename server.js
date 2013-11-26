@@ -2,72 +2,88 @@
 //
 //
 
-var app = require('http').createServer(webService).listen(9081, '0.0.0.0'), 
+var http = require('http'),//.createServer(webService).listen(9081, '0.0.0.0'), 
 fs = require('fs'),
-io = require('socket.io'),
-game = require('./gameserver');
-
-//var Game = game(4, 4, 7);
-//console.log("Game: " + Game);
-//console.log("Game.init: " + Game.init);
-//Game.init();
+gameServer = require('./gameserver'),
+path = require('path');
 
 var gameservers = [];
 
-var path = require('path');
- 
-function webService(request, response) {
-    var filePath = '.' + request.url;
-    if (filePath == './')
-        filePath = './index.html';
-         
-    var extname = path.extname(filePath);
-    var contentType = 'text/html';
-    switch (extname) {
-		case '.js':
-			contentType = 'text/javascript';
-			break;
-		case '.css':
-			contentType = 'text/css';
-			break;
-		case '.json':
-			contentType = 'application/json';
-			break;
-		case '.jpg':
-			contentType = 'image/jpeg';
-			break;
-		case '.png':
-			contentType = 'image/png';
-			break;
-		case '.gif':
-			contentType = 'image/gif';
-			break;
-		case '.ttf':
-			contentType = 'application/octet-stream';
-			break;
-		case '.otf':
-			contentType = 'application/octet-stream';
-			break;
-    }
-     
-    path.exists(filePath, function(exists) {
-        if (exists) {
-            fs.readFile(filePath, function(error, content) {
-                if (error) {
-                    response.writeHead(500);
-                    response.end();
-                }
-                else {
-                    response.writeHead(200, { 'Content-Type': contentType });
-                    response.end(content, 'utf-8');
-                }
-            });
-        } else {
-            response.writeHead(404);
-            response.end();
-        }
-    });
-     
+var httpService = function (){
+
+	this.port = 9081;
+	this.host = '0.0.0.0';
+
+}
+
+webService.prototype = {
+
+	initialize: function (host, port){
+
+		if ( port ){
+			this.port = port;
+		}
+		if( host ){
+			this.host = host;
+		}
+		http.createServer( this.request ).listen( this.host, this.port );
+		gameServer.createMasterServer( http );
+		
+	},
+
+	request: function (request, response){
+
+		console.log('request made');
+		var filePath = './';
+		var extname = '.html';
+		var contentType = 'text/html';
+
+		filePath = request.url;
+
+		if ( filePath === "/" )
+			filePath = "./index.html";
+
+		extname = path.extname(filePath);
+
+		// Validate servable content types by extensions, 
+		// remove else return; to allow all types
+		if ( extensions[extname] !== undefined ){
+
+			contentType = extensions[extname];
+
+		} else {
+
+			return;
+
+		}				
+		
+		filePath = path.join('..', filePath);
+		path.exists ( filePath, function ( exists ) {
+
+			console.log(filePath);
+			if ( exists ) {
+
+				fs.readFile( filePath, function( error, content ) {
+					if ( error ) {
+						// Error while loading existing content
+						response.writeHead( 500 );
+						response.end( '505', 'utf-8' );
+					} else {
+						// Standard success scenario
+						response.writeHead( 200, { 'Content-Type': contentType} );
+						response.end( content, 'utf-8' );
+					}
+				});
+
+			} else {
+				// Here you can print a generic page when path doesnt exist
+				response.writeHead( 404 );
+	         response.end( '404', 'utf-8' );
+			}	
+
+		});	
+	} 
+
 }
 
 var socketio = io.listen(app);

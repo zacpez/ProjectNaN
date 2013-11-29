@@ -1,5 +1,5 @@
 var Game = function () {
-	
+   
 }
 
 var Game = new function (maxplayers, maxcharacters, movementDistance) {
@@ -102,13 +102,15 @@ var Game = new function (maxplayers, maxcharacters, movementDistance) {
    this.moveCharacter = function (player, character) {
 
       // move the player and look at its actions
-      if (typeof world[character.col][character.row] == "number" && world[character.col][character.row] >= 21 ) {
+      if (typeof world[character.col][character.row] == "number" && 
+			 world[character.col][character.row] >= 21 ) {
          // Invalid movement
          
       }
       for (var p = 0; p < rules.maxplayers; p++) {
          for (var c = 0; c < rules.maxcharacters; c++) {
-            if (rules.players[p].characters[c].row == character.row && rules.players[p].characters[c].col == character.col) {
+            if (rules.players[p].characters[c].row == character.row &&
+					 rules.players[p].characters[c].col == character.col) {
                rules.killCharacter(rules.players[p], c);
             }
          }
@@ -120,5 +122,5 @@ var Game = new function (maxplayers, maxcharacters, movementDistance) {
       // killed player return a dead one
       player.characters[character].dead = true;
    }
-}
+};
 exports.game = Game;

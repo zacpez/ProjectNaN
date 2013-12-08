@@ -1,4 +1,4 @@
 [
-   {"name": "Server 1", "Map": "Legacy of Ampersand", "MapSize": "200 x 100", "Players": "2/4", "Status": "Waiting"},
-   {"name": "Server 2", "Map": "Legacy of Ampersand", "MapSize": "200 x 100", "Players": "3/4", "Status": "Playing"}
+   {"name": "Server 1", "Map": "Legacy of Ampersand", "MapSize": "200 x 200", "Players": "2/4", "Status": "Waiting"},
+   {"name": "Server 2", "Map": "Legacy of Ampersand", "MapSize": "200 x 200", "Players": "3/4", "Status": "Playing"}
 ]

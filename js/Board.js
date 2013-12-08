@@ -9,8 +9,9 @@ var GameBoard = function() {
 
 	this.map = [];
 	this.loadMap = function () {
+	
 		this.map = LocalStorage.getArrayFromLocalStorage("World");
-      console.log("hello");
+
 	}
 	
 	// Add a new object to the object list

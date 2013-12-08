@@ -4,18 +4,18 @@
 var currPage;
 
 function Menu() {
-	var self = this;
+   var self = this;
    this.loginDiv = $("#loginpages");          //// Login Div
    this.Page1 = $("#page1");                  // Login Menu
    this.Page2 = $("#page2");                  // Login Page 
    this.Page3 = $("#page3");                  // 
-	this.Page4 = $("#page4"); 						 // Forgot User
+   this.Page4 = $("#page4");                    // Forgot User
    this.NewUser = $("#newUser");              // New user button
    this.ExistingUser = $("#existingUser");    // Existing user button
    this.LoginUser = $("#login");              // Login button
    this.ForgotUser = $("#forgot");            // Forgot user button
    this.RecoverUser = $("#recover");          // Recover user button
-	this.LoginExistUser = $("#loginexistuser");      
+   this.LoginExistUser = $("#loginexistuser");      
 
    this.ServerBrowser = $("#serverbrowser");  // Overall Server Browser
    this.SBR = $('#serverbrowserroot');        // Server Browser Root
@@ -86,16 +86,16 @@ function Menu() {
       var self = this;
 
       // Overall Pages
-		this.ServerBrowser.css({display: "none"});
-		this.HighScores.css({display: "none"});
-		this.GameScreen.css({display: "none"});
-		this.loginDiv.css({display: "block"});
+      this.ServerBrowser.css({display: "none"});
+      this.HighScores.css({display: "none"});
+      this.GameScreen.css({display: "none"});
+      this.loginDiv.css({display: "block"});
 
       // Login Subsections
-		this.Page1.css({display: "block"});
-		this.Page2.css({display: "none"});
-		this.Page3.css({display: "none"});
-		this.Page4.css({display: "none"});
+      this.Page1.css({display: "block"});
+      this.Page2.css({display: "none"});
+      this.Page3.css({display: "none"});
+      this.Page4.css({display: "none"});
 
       // Serer Broswer Subsections
       this.SBR.css({display: "block"});
@@ -106,60 +106,60 @@ function Menu() {
       // Highscore Subsections
 
       //Gamescreen Subsections
-		
-		this.NewUser.click(function () {
-			currPage.css({display: "none"});
-			self.Page2.css({display: "block"});
+      
+      this.NewUser.click(function () {
+         currPage.css({display: "none"});
+         self.Page2.css({display: "block"});
          currPage = self.Page2;
-		});
-		this.ExistingUser.click(function () {
-			currPage.css({display: "none"});
-			self.Page3.css({display: "block"});
+      });
+      this.ExistingUser.click(function () {
+         currPage.css({display: "none"});
+         self.Page3.css({display: "block"});
          currPage = self.Page3;
-		});
-		this.LoginUser.click(function () {
-			currPage.css({display: "none"});
-			self.ServerBrowser.css({display: "block"});
+      });
+      this.LoginUser.click(function () {
+         currPage.css({display: "none"});
+         self.ServerBrowser.css({display: "block"});
          Game.player.name = $('#newusername').value;
          currPage = self.SBR;
-		});
-		this.ForgotUser.click(function () {
-			currPage.css({display: "none"});
-			self.Page4.css({display: "block"});
+      });
+      this.ForgotUser.click(function () {
+         currPage.css({display: "none"});
+         self.Page4.css({display: "block"});
          currPage = self.Page4;
-		});
-		this.RecoverUser.click(function () {
-			currPage.css({display: "none"});
-			self.Page1.css({display: "block"});
+      });
+      this.RecoverUser.click(function () {
+         currPage.css({display: "none"});
+         self.Page1.css({display: "block"});
          currPage = self.Page1;
-		});
-		this.LoginExistUser.click(function () {
-			currPage.css({display: "none"});
-			self.ServerBrowser.css({display: "block"});
+      });
+      this.LoginExistUser.click(function () {
+         currPage.css({display: "none"});
+         self.ServerBrowser.css({display: "block"});
          Game.player.name = $('#existuser').value;
          currPage = self.SBR;
-		});
+      });
       this.ExistingServer.click(function () {
          self.loadServers();
          currPage.css({display: "none"});
-			self.ServerList.css({display: "block"});
+         self.ServerList.css({display: "block"});
          currPage = self.ServerList;
       });
       this.NewServer.click(function () {
          currPage.css({display: "none"});
-			self.ServerSub.css({display: "block"});
+         self.ServerSub.css({display: "block"});
          currPage = self.ServerSub;
       });
       this.AddServer.click(function () {
          currPage.css({display: "none"});
          self.ServerBrowser.css({display: "none"});
-			self.GameScreen.css({display: "block"});
+         self.GameScreen.css({display: "block"});
          currPage = self.GameScreen;
       });
       this.JoinHighlighted.click(function () {
          currPage.css({display: "none"});
          self.ServerBrowser.css({display: "none"});
-			self.GameScreen.css({display: "block"});
+         self.GameScreen.css({display: "block"});
          currPage = self.GameScreen;
       });
    }

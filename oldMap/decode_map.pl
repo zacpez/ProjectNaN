@@ -7,7 +7,7 @@ $newData = "[";
 $x = 0;
 $y = 0;
 
-for ($x = 0; $x < 100; $x++) {
+for ($x = 0; $x < 200; $x++) {
 	$newData .= "[";
 	for ($y = 0; $y < 200; $y++) {
 		$line = <FILE>;

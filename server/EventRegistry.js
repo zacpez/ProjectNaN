@@ -1,35 +1,29 @@
 
-var EventRegistry = new function (){
+var EventRegistry = function (){
 
    this.socket;
+   this.counter = 0;
 
-}
-
-EventRegistry.prototype = {
-
-   initialize: function ( socket ){
+   this.initialize = function ( eventConfig ){
       // provide access to the library of registered socket events
-      this.socket = socket;
-      socket.on( 'connection', this.listener( socket ) );
-   },
-
-   listener: function ( socket ){
-      console.log( "listener called" );
-   },
+      for( entry in eventConfig ){
+         this.register( entry.event, entry.obj, entry.func );
+      }
+   };
    
-   register: function( event, obj, func ){
-      this.socket.on( event, obj[func] );
-      callback( event );
-   },
+   this.register = function( event, obj, func ){
+      this[this.counter] = { "event": event, "obj": obj, "func": func };
+      this.count++;
+   };
    
-   deregister: function( event, obj, func ){
+   this.deregister = function( event, obj, func ){
       this.socket.removeListener( event, obj[func] );
-   },
-   
-   toString: function (){
+   };
+
+   this.toString = function (){
       console.log( this.socket.listeners('connection') );
-   }
+   };
 
 };
 
-exports.eventresistry = EventRegistry;
+module.exports = EventRegistry;

@@ -1,7 +1,3 @@
-var Game = function () {
-   
-}
-
 var Game = new function (maxplayers, maxcharacters, movementDistance) {
    var rules = this;
    this.currentPlayer = 0;
@@ -15,10 +11,13 @@ var Game = new function (maxplayers, maxcharacters, movementDistance) {
    this.maxforestgear = 7;
    this.maxwatergear = 7;
    this.maxfightgear = 7;
-   this.world = require('./data/World.json');
+   this.world = require('../data/World.json');
+   
+   this.events = [];
+   
 
    this.init = function () {
-
+      
       for (var i = 0; i < rules.maxmoutaingear; ) {
          var col = Math.random() * rules.world.length;
          var row = Math.random() * rules.world[0].length;
@@ -53,7 +52,7 @@ var Game = new function (maxplayers, maxcharacters, movementDistance) {
       }
       console.log('Equipment placed:');
       console.log(rules.equipment);
-   }
+   };
 
    this.newPlayer = function (player) {
       
@@ -70,7 +69,7 @@ var Game = new function (maxplayers, maxcharacters, movementDistance) {
       } else {
          rules.spectators.push(player);
       }
-   }
+   };
    
    this.addCharacter = function (player, col, row, warlord) {
 
@@ -86,7 +85,7 @@ var Game = new function (maxplayers, maxcharacters, movementDistance) {
          } 
          player.characters.push(character);
       }
-   }
+   };
 
    this.disconnected = function (player) {
 
@@ -97,30 +96,30 @@ var Game = new function (maxplayers, maxcharacters, movementDistance) {
             rules.killCharacter(player, victim);
          }
       }
-   }
+   };
 
    this.moveCharacter = function (player, character) {
 
       // move the player and look at its actions
       if (typeof world[character.col][character.row] == "number" && 
-			 world[character.col][character.row] >= 21 ) {
+          world[character.col][character.row] >= 21 ) {
          // Invalid movement
          
       }
       for (var p = 0; p < rules.maxplayers; p++) {
          for (var c = 0; c < rules.maxcharacters; c++) {
             if (rules.players[p].characters[c].row == character.row &&
-					 rules.players[p].characters[c].col == character.col) {
+                rules.players[p].characters[c].col == character.col) {
                rules.killCharacter(rules.players[p], c);
             }
          }
       }
-   }
+   };
 
    this.killCharacter = function (player, character) {
 
       // killed player return a dead one
       player.characters[character].dead = true;
-   }
+   };
 };
-exports.game = Game;
+module.exports = Game;

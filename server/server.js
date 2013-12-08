@@ -7,21 +7,28 @@ fs = require('fs'),
 gameServer = require('./gameserver'),
 path = require('path');
 
-// Subset of the master server
-var gameservers = [];
+var extensions = {
+        '.js': 'text/javascript',
+        '.css': 'text/css',
+        '.html': 'text/html',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.ttf': 'text/octet-stream',
+        '.otf': 'text/octet-stream'
+};
 
 // Generic file serving
 var httpService = function (){
 
-   this.port = 9081;
+   this.http;
+   this.port = 80;
    this.host = '0.0.0.0';
 
-}
-
-httpService.prototype = {
 
    // Overwrite the default values, and start extended services
-   initialize: function (host, port){
+   this.initialize = function (host, port){
 
       if ( port ){
          this.port = port;
@@ -30,13 +37,13 @@ httpService.prototype = {
          this.host = host;
       }
 
-      http.createServer( this.request ).listen( this.host, this.port );
-      gameServer.initialize( http );
+      this.http = http.createServer( this.request ).listen( this.port, this.host );
+      gameServer.initialize( this.http );
       
-   },
+   };
 
    // Standard http request handler
-   request: function (request, response){
+   this.request = function (request, response){
 
       console.log('request made');
       var filePath = './';
@@ -87,8 +94,7 @@ httpService.prototype = {
          }   
 
       });   
-   } 
-
+   };
 };
 
-exports.httpService = httpService;
+module.exports = httpService;

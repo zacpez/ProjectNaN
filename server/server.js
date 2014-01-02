@@ -1,12 +1,10 @@
-//
-//
-//
-
 var http = require('http'), 
 fs = require('fs'),
-gameServer = require('./gameserver'),
 path = require('path');
 
+/**
+ * 
+ */
 var extensions = {
         '.js': 'text/javascript',
         '.css': 'text/css',
@@ -19,15 +17,39 @@ var extensions = {
         '.otf': 'text/octet-stream'
 };
 
-// Generic file serving
-var httpService = function (){
+/**
+ * The http service handles the serving og the files as the client requests the primary files needed to 
+ * continue into a web socket connection. Any web page navigation may route through this module if more
+ * pages are implemented.
+ * 
+ * @constructor
+ * @class HttpService
+ * @interface {http}
+ * @returns HttpService
+ */
+var HttpService = function (){
 
    this.http;
+   /**
+    * Each system may have different ranges and limits to port use, contact system administrator or consult 
+    * your router for this information.
+    * @type {number} simply stores the port number to be set or read
+    */
    this.port = 80;
+   /**
+    * The host variable is used to define the scope of access to the server. '0.0.0.0' is used for World 
+    * Wide Web, '127.0.0.1' is for Local Area Network.
+    * @type {string} simple string that is set to start the server in define 
+    */
    this.host = '0.0.0.0';
 
 
-   // Overwrite the default values, and start extended services
+   /**
+    * Overwrites the default values for host and port. It continues to start the HttpService and other additional 
+    * services as well.
+    * @param {string} host standard IPv4 string such as '0.0.0.0'
+    * @param {number} port is a standard port number, each system may have different ranges and limits to port use.
+    */
    this.initialize = function (host, port){
 
       if ( port ){
@@ -38,14 +60,17 @@ var httpService = function (){
       }
 
       this.http = http.createServer( this.request ).listen( this.port, this.host );
-      gameServer.initialize( this.http );
       
    };
-
-   // Standard http request handler
+   
+   /**
+    * Standard http request handler to serve files to a browser client, may happen multiple times per connection.
+    * 
+    * @param {http.IncomingMessage} request 
+    * @param {http.ServerResponse} response 
+    */
    this.request = function (request, response){
 
-      console.log('request made');
       var filePath = './';
       var extname = '.html';
       var contentType = 'text/html';
@@ -70,9 +95,9 @@ var httpService = function (){
       }            
       
       filePath = path.join('..', filePath);
-      path.exists ( filePath, function ( exists ) {
+      fs.exists ( filePath, function ( exists ) {
 
-         console.log(filePath);
+         //console.log(filePath);
          if ( exists ) {
 
             fs.readFile( filePath, function( error, content ) {
@@ -97,4 +122,4 @@ var httpService = function (){
    };
 };
 
-module.exports = httpService;
+module.exports = HttpService;

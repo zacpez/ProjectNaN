@@ -12,6 +12,7 @@ var EventRegistry = function (){
    };
    
    this.register = function( event, obj, func ){
+	   
       this[this.counter] = { "event": event, "obj": obj, "func": func };
       this.count++;
    };

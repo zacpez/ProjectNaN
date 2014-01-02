@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: js/Socket.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: js/Socket.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @constructor
+ * @class Socket
+ * @variation 2
+ * @param {string} host string containing 'url:port' seperated by semicolon
+ */
+var Socket = function (host) {
+
+	/**
+	 * For self reference when 'this' is unavailable
+	 * @protected
+	 * @type {this}
+	 */
+   var self = this;
+	
+	/**
+	 * @public
+	 * @type {object|socket.io-client}
+	 */
+   this.server = io.connect(host);
+   
+	/**
+	 * @public
+	 * @param {object} user
+	 */
+	this.addUser = function (user) {
+		// Send user data to the server to be processed
+		this.server.emit('add_user', user);
+	}
+	
+	/**
+	 * @public
+	 * @param {object} user
+	 */
+	this.getUser = function (user) {
+		// Apply parameters to retrieve correct user
+		this.server.emit('get_user', user);
+	}
+	
+	/**
+	 * @public
+	 * @param {object} users
+	 */
+	this.getUserList = function (users) {
+		// Get all users registered in current room
+		this.server.emit('get_user_list', users);
+	}
+	
+	/**
+	 * @public
+	 * @param {object} user
+	 */
+	this.removeUser = function (user) {
+		// Remove user from selected room
+		this.server.emit('remove_user', user);
+	}
+	
+	/**
+	 * @public
+	 * @param {object} users
+	 */
+	this.updateUserList = function (users) {
+		// Update current room
+		this.server.emit('update_user_list', users);
+	}
+	
+	/**
+	 * Add room to the server for the form
+	 * @public
+	 * @param {object} room
+	 */
+	this.addRoom = function (room) {
+		// 
+		this.server.emit('add_room', room);
+	}
+	
+	/**
+	 * Get room info from the list
+	 * @public
+	 * @param {object} room
+	 */
+	this.getRoom = function (room) {
+		this.server.emit('get_room', room);
+	}
+	
+	/**
+	 * Get all the rooms from the server
+	 * @public
+	 * @param {object} rooms
+	 */
+	this.getRoomList = function (rooms) {
+		this.server.emit('get_room_list', rooms);
+	}
+	
+	/**
+	 * Remove the room from the servers list
+	 * @public
+	 * @param {object} room
+	 */
+	this.removeRoom = function (room) {
+		this.server.emit('remove_room', room);
+	}
+	
+	/**
+	 * Remove the room from the servers list
+	 * @public
+	 * @param {object} rooms
+	 */
+	this.updateRoomList = function (rooms) {
+		this.server.emit('update_room_list', rooms);
+	}
+	
+	/**
+	 * Remove the room from the servers list
+	 * @public
+	 * @param {object} room
+	 */
+	this.joinRoom = function (room) {
+		this.server.emit('join_room', room);
+	}
+	
+	/**
+	 * Remove the room from the servers list
+	 * @public
+	 * @param {object} room
+	 */
+	this.leaveRoom = function (room) {
+		this.server.emit('leave_room', room);
+	}
+	
+	/**
+	 * @public
+	 * @param {object} mapName
+	 */
+	this.loadMap = function (mapName) {
+		self.server.emit('load_map', mapName);
+		console.log("sent req");
+	}
+	
+	/**
+	 * @public
+	 * @param {object} player
+	 */
+   this.newPlayer = function (player) {
+      self.server.emit('add_player', player);
+   }
+   	
+	/**
+	 * @public
+	 * @param {integer} col column of the target location
+	 * @param {integer} row row of the target location
+	 */
+   this.addCharacter = function (col, row) {
+      self.server.emit('add_character', { id: Game.me.id, col: col, row: row});
+   }
+   	
+	/**
+	 * @public
+	 * @param {object} character character the movment will act on
+	 * @param {object} path client-side determined path for a character movement
+	 */
+   this.moveCharacter = function (character, path) {
+      if (Game.players[Game.me.id]) {
+         self.server.emit('move_character', { id: Game.me.id, character: character, path: path});
+      }
+   }
+   	
+	/**
+	 * @public
+	 * @param {object} character character that will kill the victim
+	 * @param {object} victim the target of the clients kill
+	 */
+   this.killCharacter = function (character, victim) {
+      self.server.emit('kill_character', Game.players[Game.me]);
+   }
+   	
+	/**
+	 * @public
+	 * @param {object} data
+	 */
+   this.updatePlayers = function (data) {
+      // Add equiptment if player is new
+      if (Game.equipt.objects.length === 0) {
+         for (var i = 0; i &lt; data.equipt.length; i++) {
+            Game.equipt.add(new Equipt(data.equipt[i].col, data.equipt[i].row, data.equipt[i].type, i));
+         }
+         Game.setScreen(23, Game.equipt);
+      }
+      
+      // Add the newplayer, or all players if just joined
+      if (Game.players.length === 0) {
+         for (var i = 0; i &lt; data.players.length; i++) {
+   
+            var plyr = new Player(data.players[i].name);
+            plyr.id = data.players[i].id;
+            plyr.movements = data.players[i].movements;
+            plyr.warlord = data.players[i].warlord;
+            plyr.skill = data.players[i].skill;
+            Game.players.push(plyr);
+            
+            for(var j = 0; j &lt; data.players[i].characters.length; j++) {
+               var newChar = new Character(data.players[i].id, data.players[i].characters[j].col, data.players[i].characters[j].row, data.players[i].characters[j].skill, data.players[i].characters[j].warlord);
+               newChar.dead = data.players[i].characters[j].dead;
+               plyr.characters.push(newChar);
+               Game.playerBoard.add(newChar);
+               Game.setScreen(25, Game.playerBoard);
+            }
+            Game.me = Game.players[data.id];
+         }
+      } else {
+         var plyr = new Player(data.players[Game.players.length].name);
+         plyr.id = data.players[Game.players.length].id;
+         plyr.movements = data.players[Game.players.length].movements;
+         plyr.warlord = data.players[Game.players.length].warlord;
+         plyr.skill = data.players[Game.players.length].skill;
+         
+         Game.players.push(plyr);
+      }
+   }
+
+   /**
+	 * @event socket:added_user
+	 * @param {object} user
+	 */
+	this.server.on('added_user', function (user) {
+		console.log("user added");
+	});
+	
+	/**
+	 * @event socket:resp_user
+	 * @param {object} user
+	 */
+	this.server.on('resp_user', function (user) {
+		
+	});
+	
+	/**
+	 * @event socket:resp_user_list
+	 * @param {object} user
+	 */
+	this.server.on('resp_user_list', function (users) {
+		
+	});
+	
+	/**
+	 * @event socket:removed_player
+	 * @param {object} user
+	 */
+	this.server.on('removed_player', function (player) {
+		
+	});
+	
+	/**
+	 * @event socket:update_players
+	 * @param {object} user
+	 */
+	this.server.on('update_players', function (players) {
+		
+	});
+	
+	/**
+	 * @event socket:update_rooms
+	 * @param {object} user
+	 */
+	this.server.on('update_rooms', function(rooms) {
+		pn.localStorage.set('Servers', rooms);
+		pn.menu.loadServers(rooms);
+	});
+   
+	/**
+	 * @event socket:added_player
+	 * @param {object} user
+	 */
+   this.server.on('added_player', function (data) {
+      console.log(data);
+      
+      self.updatePlayers(data);
+   });
+
+	/**
+	 * @event socket:used_player
+	 * @param {object} user
+	 */
+   this.server.on('used_player', function (data) {
+      self.updatePlayers(data);
+   });
+   
+	/**
+	 * @event socket:added_character
+	 * @param {object} user
+	 */
+   this.server.on('added_character', function (data) {
+      var character = new Character(data.id, data.character.col, data.character.row, data.character.skill, data.character.warlord);
+      Game.players[data.id].characters[data.len] = character;
+      Game.playerBoard.add(character);
+      Game.setScreen(25, Game.playerBoard);
+   
+   });
+	
+   /**
+	 * @event socket:moved_character
+	 * @param {object} user
+	 */
+   this.server.on('moved_character', function (data) {
+      // Move the character broadcasted to be moving.
+      Game.players[data.id].characters[data.character].moves = data.path;
+      Game.players[data.id].characters[data.character].move();
+   });
+   
+	/**
+	 * @event socket:killed_character
+	 * @param {object} user
+	 */
+   this.server.on('killed_character', function (data) {
+      console.log(data.player + " : " + data.character);
+      Game.players[data.player].characters[data.character].kill();
+   });
+	
+	/**
+	 * @event socket:loaded_map
+	 * @param {object} user
+	 */
+	this.server.on('loaded_map', function(data) {
+		pn.localStorage.set(data.name, data.map);
+		console.log("recv map");
+	});
+
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Game.html">Game</a></li><li><a href="GameBoard.html">GameBoard</a></li><li><a href="GameServer.html">GameServer</a></li><li><a href="HttpService.html">HttpService</a></li><li><a href="LocalStorage.html">LocalStorage</a></li><li><a href="Menu.html">Menu</a></li><li><a href="Socket.html">Socket</a></li><li><a href="Socket_.html">Socket(2)</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:socket:add_character">socket:add_character</a></li><li><a href="global.html#event:socket:add_player">socket:add_player</a></li><li><a href="global.html#event:socket:add_room">socket:add_room</a></li><li><a href="global.html#event:socket:add_user">socket:add_user</a></li><li><a href="global.html#event:socket:added_character">socket:added_character</a></li><li><a href="global.html#event:socket:added_player">socket:added_player</a></li><li><a href="global.html#event:socket:added_user">socket:added_user</a></li><li><a href="global.html#event:socket:connection">socket:connection</a></li><li><a href="global.html#event:socket:get_room_list">socket:get_room_list</a></li><li><a href="global.html#event:socket:get_user_list">socket:get_user_list</a></li><li><a href="global.html#event:socket:join_room">socket:join_room</a></li><li><a href="global.html#event:socket:kill_character">socket:kill_character</a></li><li><a href="global.html#event:socket:killed_character">socket:killed_character</a></li><li><a href="global.html#event:socket:leave_room">socket:leave_room</a></li><li><a href="global.html#event:socket:load_map">socket:load_map</a></li><li><a href="global.html#event:socket:loaded_map">socket:loaded_map</a></li><li><a href="global.html#event:socket:move_character">socket:move_character</a></li><li><a href="global.html#event:socket:moved_character">socket:moved_character</a></li><li><a href="global.html#event:socket:remove_room">socket:remove_room</a></li><li><a href="global.html#event:socket:remove_user">socket:remove_user</a></li><li><a href="global.html#event:socket:removed_player">socket:removed_player</a></li><li><a href="global.html#event:socket:resp_user">socket:resp_user</a></li><li><a href="global.html#event:socket:resp_user_list">socket:resp_user_list</a></li><li><a href="global.html#event:socket:update_players">socket:update_players</a></li><li><a href="global.html#event:socket:update_rooms">socket:update_rooms</a></li><li><a href="global.html#event:socket:used_player">socket:used_player</a></li><li><a href="global.html#event:window:load">window:load</a></li></ul><h3>Global</h3><ul><li><a href="global.html#extensions">extensions</a></li><li><a href="global.html#OBJECT_ENEMY_PROJECTILE">OBJECT_ENEMY_PROJECTILE</a></li><li><a href="global.html#OBJECT_PLAYER">OBJECT_PLAYER</a></li><li><a href="global.html#OBJECT_POWERUP">OBJECT_POWERUP</a></li><li><a href="global.html#OBJECT_TILE_COLLIDE">OBJECT_TILE_COLLIDE</a></li><li><a href="global.html#OBJECT_TILE_NO_COLLIDE">OBJECT_TILE_NO_COLLIDE</a></li><li><a href="global.html#PLAYER_SIZE">PLAYER_SIZE</a></li><li><a href="global.html#playGame">playGame</a></li><li><a href="global.html#pn">pn</a></li><li><a href="global.html#sprites">sprites</a></li><li><a href="global.html#startGame">startGame</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Thu Jan 02 2014 15:23:14 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

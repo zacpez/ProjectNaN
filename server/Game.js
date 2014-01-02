@@ -1,3 +1,4 @@
+
 var Game = new function (maxplayers, maxcharacters, movementDistance) {
    var rules = this;
    this.currentPlayer = 0;

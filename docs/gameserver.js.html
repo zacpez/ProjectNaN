@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/gameserver.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: server/gameserver.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var socket = require('./socket'),
+    util = require('util'),
+    events = require('events'),
+    Game = require('./game');
+/**
+ * @constructor
+ * @param {socket} socket 
+ * @extends {EventEmitter}
+ * @returns A new GameServer object
+ */
+var GameServer = function ( socket ) {
+	
+   /* extend EventEmitter object */
+   events.EventEmitter.call(this);
+   
+   /**
+    * Contents are references to the socket object for binding events.
+    * @type {Socket}
+    */
+   this.socket;
+   
+   /**
+    * Contents are references to the GameServer events for binding to socket.
+    * @dict
+    * @type {Array.&lt;Function>}
+    */
+   this.events = [];
+   
+   /**
+    * Contents are current games running, or otherwise not added to the DB for statistics.
+    * @dict
+    * @type {Array.&lt;Function>}
+    */
+   this.rooms = [];
+   
+   /**
+    * Contents are users online or awaiting removal from timeout function.
+    * @dict
+    * @type {Array.&lt;Function>}
+    */
+   this.users = [];
+   
+   /**
+    * Runtime setup function
+    */
+   this.initialize = function (){
+
+      console.log( "Game Server Starting.." );
+      
+   };
+   
+   /**
+    * @returns {string} this methods returns a stringified version on this object.
+    */
+   this.toString = function (){
+      return "Players: " + this.users.length + 
+             " Rooms: " + this.rooms.length +
+             " Socket: " + this.socket.toString();
+   };
+
+};
+
+util.inherits(GameServer, events.EventEmitter);
+
+module.exports = GameServer;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Game.html">Game</a></li><li><a href="GameBoard.html">GameBoard</a></li><li><a href="GameServer.html">GameServer</a></li><li><a href="HttpService.html">HttpService</a></li><li><a href="LocalStorage.html">LocalStorage</a></li><li><a href="Menu.html">Menu</a></li><li><a href="Socket.html">Socket</a></li><li><a href="Socket_.html">Socket(2)</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:socket:add_character">socket:add_character</a></li><li><a href="global.html#event:socket:add_player">socket:add_player</a></li><li><a href="global.html#event:socket:add_room">socket:add_room</a></li><li><a href="global.html#event:socket:add_user">socket:add_user</a></li><li><a href="global.html#event:socket:added_character">socket:added_character</a></li><li><a href="global.html#event:socket:added_player">socket:added_player</a></li><li><a href="global.html#event:socket:added_user">socket:added_user</a></li><li><a href="global.html#event:socket:connection">socket:connection</a></li><li><a href="global.html#event:socket:get_room_list">socket:get_room_list</a></li><li><a href="global.html#event:socket:get_user_list">socket:get_user_list</a></li><li><a href="global.html#event:socket:join_room">socket:join_room</a></li><li><a href="global.html#event:socket:kill_character">socket:kill_character</a></li><li><a href="global.html#event:socket:killed_character">socket:killed_character</a></li><li><a href="global.html#event:socket:leave_room">socket:leave_room</a></li><li><a href="global.html#event:socket:load_map">socket:load_map</a></li><li><a href="global.html#event:socket:loaded_map">socket:loaded_map</a></li><li><a href="global.html#event:socket:move_character">socket:move_character</a></li><li><a href="global.html#event:socket:moved_character">socket:moved_character</a></li><li><a href="global.html#event:socket:remove_room">socket:remove_room</a></li><li><a href="global.html#event:socket:remove_user">socket:remove_user</a></li><li><a href="global.html#event:socket:removed_player">socket:removed_player</a></li><li><a href="global.html#event:socket:resp_user">socket:resp_user</a></li><li><a href="global.html#event:socket:resp_user_list">socket:resp_user_list</a></li><li><a href="global.html#event:socket:update_players">socket:update_players</a></li><li><a href="global.html#event:socket:update_rooms">socket:update_rooms</a></li><li><a href="global.html#event:socket:used_player">socket:used_player</a></li><li><a href="global.html#event:window:load">window:load</a></li></ul><h3>Global</h3><ul><li><a href="global.html#extensions">extensions</a></li><li><a href="global.html#OBJECT_ENEMY_PROJECTILE">OBJECT_ENEMY_PROJECTILE</a></li><li><a href="global.html#OBJECT_PLAYER">OBJECT_PLAYER</a></li><li><a href="global.html#OBJECT_POWERUP">OBJECT_POWERUP</a></li><li><a href="global.html#OBJECT_TILE_COLLIDE">OBJECT_TILE_COLLIDE</a></li><li><a href="global.html#OBJECT_TILE_NO_COLLIDE">OBJECT_TILE_NO_COLLIDE</a></li><li><a href="global.html#PLAYER_SIZE">PLAYER_SIZE</a></li><li><a href="global.html#playGame">playGame</a></li><li><a href="global.html#pn">pn</a></li><li><a href="global.html#sprites">sprites</a></li><li><a href="global.html#startGame">startGame</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Thu Jan 02 2014 15:23:14 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

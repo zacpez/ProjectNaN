@@ -9,12 +9,12 @@ var Character = new function (col, row, equipt, warlord) {
    this.y = this.row*64-32;
 
    this.move = function (newcol, newrow) {
-      this.x
-      this.y   
+      this.col = newcol;
+      this.row = newrow;
    }
    
    this.buildPath = function () {
-      
+      // A-star pathfinding
    }
    
    this.update = function (dt) {
@@ -23,8 +23,8 @@ var Character = new function (col, row, equipt, warlord) {
 
    this.iterate = function () {
       this.resetObjectsToRemove();
-		this.iterate('update', dt);
-		this.finalizeRemoved();	
+      this.iterate('update', dt);
+      this.finalizeRemoved();   
    }
    
    this.draw = function () {

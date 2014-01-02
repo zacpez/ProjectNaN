@@ -1,35 +1,56 @@
-//
-// Localstorage.js
-//
+/**
+ * @constructor
+ * @class LocalStorage
+ * 
+ */
+function LocalStorage() {
 
-var LocalStorage = new function () {
+   /**
+	 * Loaded server list
+	 * @public
+	 * @type {Array.<object>}
+	 */
    this.servers = [];
-   
-	this.init = function () {
-		Database.loadMap();
-      Game.board.loadMap();
-      Database.loadServers();
-	}
 	
-   this.clear = function (){
-      var theArray = new Array();
-      localStorage.setItem("map", JSON.stringify(theArray));
+	/**
+	 * Grabs the server list
+	 * @public
+	 */
+   this.initialize = function () {
+      pn.socket.getRoomList();
    }
 	
-	this.set = function (key, value) {
-		localStorage.setItem(key, JSON.stringify(value));
-	}
-
+   /**
+	 * Sets a value of a key to undefined in the browsers storage
+	 * @public
+	 */
+   this.clear = function (key){
+      var localData = new Array();
+      localStorage.setItem(key, undefined);
+   }
+	
+	/**
+	 * @public
+	 * @param key name on data to be set in the browsers storage
+	 * @param value data to be set in the browsers storage
+	 */
+   this.set = function (key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+   }
+	
+	/**
+	 * @public
+	 * @param key search key to find in browser storage
+	 * @returns response value that the search key is related to
+	 */
    this.getArrayFromLocalStorage = function (key) {
-      var theArray = localStorage.getItem(key);
-      
-      if (! theArray) {
-          theArray = new Array();
+      var response = localStorage.getItem(key);
+      if (!(response)) {
+          return undefined; 
       } else {
-          theArray = JSON.parse(theArray);
+          response = JSON.parse(response);
       }
-
-      return theArray;
+      return response;
    }
 
 };

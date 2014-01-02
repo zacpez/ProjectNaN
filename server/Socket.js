@@ -1,85 +1,200 @@
 var io = require('socket.io'),
+	fs = require('fs'),
     EventRegistry = require('./eventregistry');
 
-var theSocket = function () {
+/**
+ * Socket is a web socket module acting as the primary server for all the game related services.
+ * 
+ * There are some events that can be fired before a game is started, such as player and room related events.
+ * @constructor
+ * @class Socket
+ * @returns Socket The wev socket is designed specifically for ProjectNaN, and utilizes socket.io for simplicity purposes. 
+ */
+var Socket = function () {
+	
+   /**
+    * Used in the event handlers when disassociated from this Socket object
+    * @private
+    * @type {object} self reference where 'this' isn't possible.
+    * @TODO rewrite in a way that this variable is no longer needed, if possible.
+    */
+   var self = this;
+   
+   /**
+    * This member variable holds the socket created by socket.io. Encapsulated by this object to be interfaced with.
+    * @private
+    * @type {object|socket}
+    */
+   var webSocket = {};
+   
+   
+   /**
+    * The initialize method in the Socket module is similar any other module in the pack. It is to set up data 
+    * and methods needed during runtime. In this instance a new socket is created to manage websocket messages. 
+    * For each connection to the server a series of events are defined to manage the menu, game server rooms, 
+    * and mics statistics.
+    * 
+    * @param {http} webService Used to source infomation from the http web service setup previously in execution.
+    * @param {game} gameServer Enables the socket to utilize the game module when events are fired.
+    */
+   this.initialize = function ( webService, gameServer ){
 
-   this.socket;
-
-   this.initialize = function ( webService ){
-
-      this.socket = io.listen( webService );
-      this.socket.sockets.on('connection', function (socket){
-         /* 
-         for( register in self.events ){
-           console.log( self.events[register]);
-           socket.on( self.events[register].event, self.events[register].obj[self.events[register].func] );
-         }
-         */
-         socket.on('addUser', function ( user ){
-            GameServer.users[user.name] = user;
+	  webSocket = io.listen( parseInt(webService.port)+1 );
+      
+      /**
+       * This event is fired on individual connections, and sets up socket events.
+       * 
+       * @event socket:connection
+       * @param {string} the first parameter is used for the socket event's name
+       * @param {function} Callback method when the socket event is called.
+       */
+      webSocket.sockets.on('connection', function (socket){
+    	 console.log('connection');
+    	 
+    	 /**
+    	  * @event socket:add_user
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('add_user', function ( user ){
+        	console.log('event');
+            gameServer.users[user.name] = user;
             socket.username = user.name;
             socket.room = 'Lobby';
             socket.join('Lobby');
-            socket.emit('updateplayers', GameServer.users);
-            socket.broadcast.to(socket.room).emit('updateplayers', GameServer.users);
-            socket.emit('updaterooms', GameServer.rooms, 'Lobby');
+            socket.emit('added_user', gameServer.users);
+            socket.broadcast.to(socket.room).emit('updateplayers', gameServer.users);
+            socket.emit('updaterooms', gameServer.rooms, 'Lobby');
          });
          
-         socket.on('removeUser', function ( user ){
-            delete GameServer.users[ user ];
-            io.socket.emit('updateplayers', GameServer.users);
-            socket.broadcast.to(socket.room).emit('updateplayers', GameServer.users);
+    	 /**
+    	  * @event socket:remove_user
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('remove_user', function ( user ){
+            delete gameServer.users[ user ];
+            io.socket.emit('updateplayers', gameServer.users);
+            socket.broadcast.to(socket.room).emit('updateplayers', gameServer.users);
             socket.leave(socket.room);
          });
          
-         socket.on('getUserList', function ( users ){
-            socket.emit('updateplayers', GameServer.users);
+    	 /**
+    	  * @event socket:get_user_list
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('get_user_list', function ( users ){
+            socket.emit('updateplayers', gameServer.users);
          });
          
-         socket.on('addRoom', function ( room ){
-        	room = GameServer.newRoom( room );
-        	GameServer.rooms.push( room );
+    	 /**
+    	  * @event socket:get_room_list
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('get_room_list', function (){
+             socket.emit('updaterooms', gameServer.rooms);
+          });
+         
+    	 /**
+    	  * Event handler for adding a room to the game server object.
+    	  * @event socket:add_room
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('add_room', function ( room ){
+        	room = gameServer.newRoom( room );
+        	gameServer.rooms.push( room );
             socket.room = room;
             socket.join(room);
-            socket.emit('updaterooms', GameServer.rooms);
+            socket.emit('updaterooms', gameServer.rooms);
          });
          
-         socket.on('joinRoom', function ( room ){
-            if( GameServer.rooms[room] !== undefined ) return;
+    	 /**
+    	  * @event socket:join_room
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('join_room', function ( room ){
+            if( gameServer.rooms[room] !== undefined ) return;
             socket.room = room;
             socket.join(room);
-            GameServer.rooms.users[socket.username] = socket.username;
-            socket.broadcast.to(socket.room).emit('updateplayers', GameServer.users);
+            gameServer.rooms.users[socket.username] = socket.username;
+            socket.broadcast.to(socket.room).emit('updateplayers', gameServer.users);
          });
          
-         socket.on('leaveRoom', function ( room ){
-        	GameServer.rooms[room.name] = room;
+    	 /**
+    	  * @event socket:leave_room
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('leave_room', function ( room ){
+        	gameServer.rooms[room.name] = room;
             var oldRoom = socket.room;
             socket.leave(socket.room);
             socket.join('Lobby');
-            socket.broadcast.to(oldRoom).emit('updateplayers', GameServer.users);
+            socket.broadcast.to(oldRoom).emit('updateplayers', gameServer.users);
             socket.room = 'Lobby';
-            socket.emit('updaterooms', GameServer.rooms);
-         });
-      
-         socket.on('removeRoom', function ( room ){
-        	GameServer.rooms.remove( room );
-            socket.emit('removeroom', GameServer.rooms, room);
+            socket.emit('updaterooms', gameServer.rooms);
          });
          
+    	 /**
+    	  * @event socket:remove_room
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('remove_room', function ( room ){
+        	gameServer.rooms.remove( room );
+            socket.emit('removeroom', gameServer.rooms, room);
+         });
+         
+    	 /**
+    	  * @event socket:load_map
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
+         socket.on('load_map', function(mapName){
+        	console.log("map request");
+        	var response = {};
+        	response.name = mapName;
+        	response.map = self.getFile("data/World.json");
+        	socket.emit('loaded_map', response);
+         });
+         
+    	 /**
+    	  * @event socket:add_player
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
          socket.on('add_player', function (playerObj){
         	 console.log(playerObj);
         	 socket.broadcast.to(socket.room).emit('added_player', playerObj );
          });
          
+    	 /**
+    	  * @event socket:add_character
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
 		 socket.on('add_character', function (characterObj){
 			 socket.broadcast.to(socket.room).emit('resp_character_add', characterObj );
 		 });
 		 
+    	 /**
+    	  * @event socket:move_character
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
 		 socket.on('move_character', function (characterObj){
 			 socket.broadcast.to(socket.room).emit('resp_character_move', characterObj );
 		 });
 		 
+    	 /**
+    	  * @event socket:kill_character
+    	  * @param {string} the first parameter is used for the socket event's name
+    	  * @param {function} Callback method when the socket event is called.
+    	  */
 		 socket.on('kill_character', function (characterObj){
 			 socket.broadcast.to(socket.room).emit('killed_character', characterObj );
 		 });
@@ -88,12 +203,32 @@ var theSocket = function () {
       
    };
    
+   /**
+	* @param {string} filename filename is a string of a requested file using socket.io as the medium.
+	* @returns {string|undefined} contents of the requested file, otherwise returns undefined if the 
+	* files doesn't exist
+	*/
+   this.getFile = function(filename){
+	   var contents = '';
+	   fs.readFile(filename, function(error, data){
+		  if(error) {
+			  throw error;
+		  } else {
+			  contents = data;
+		  }
+	   });
+	   return contents;
+   };
+
+   /**
+    * @returns {string} this methods returns a stringified version on this object.
+    */
    this.toString = function (){
       return "Host: " + this.webService +
              "\nPort: " + this.webService +
-             "\nListeners: \n" + this.socket.listeners( 'connection' );
+             "\nListeners: \n" + webSocket.listeners( 'connection' );
    };
 
 };
 
-module.exports = theSocket;
+module.exports = Socket;

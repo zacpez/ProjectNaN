@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: server/server.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: server/server.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var http = require('http'), 
+fs = require('fs'),
+path = require('path');
+
+/**
+ * 
+ */
+var extensions = {
+        '.js': 'text/javascript',
+        '.css': 'text/css',
+        '.html': 'text/html',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.ttf': 'text/octet-stream',
+        '.otf': 'text/octet-stream'
+};
+
+/**
+ * The http service handles the serving og the files as the client requests the primary files needed to 
+ * continue into a web socket connection. Any web page navigation may route through this module if more
+ * pages are implemented.
+ * 
+ * @constructor
+ * @class HttpService
+ * @interface {http}
+ * @returns HttpService
+ */
+var HttpService = function (){
+
+   this.http;
+   /**
+    * Each system may have different ranges and limits to port use, contact system administrator or consult 
+    * your router for this information.
+    * @type {number} simply stores the port number to be set or read
+    */
+   this.port = 80;
+   /**
+    * The host variable is used to define the scope of access to the server. '0.0.0.0' is used for World 
+    * Wide Web, '127.0.0.1' is for Local Area Network.
+    * @type {string} simple string that is set to start the server in define 
+    */
+   this.host = '0.0.0.0';
+
+
+   /**
+    * Overwrites the default values for host and port. It continues to start the HttpService and other additional 
+    * services as well.
+    * @param {string} host standard IPv4 string such as '0.0.0.0'
+    * @param {number} port is a standard port number, each system may have different ranges and limits to port use.
+    */
+   this.initialize = function (host, port){
+
+      if ( port ){
+         this.port = port;
+      }
+      if( host ){
+         this.host = host;
+      }
+
+      this.http = http.createServer( this.request ).listen( this.port, this.host );
+      
+   };
+   
+   /**
+    * Standard http request handler to serve files to a browser client, may happen multiple times per connection.
+    * 
+    * @param {http.IncomingMessage} request 
+    * @param {http.ServerResponse} response 
+    */
+   this.request = function (request, response){
+
+      var filePath = './';
+      var extname = '.html';
+      var contentType = 'text/html';
+
+      filePath = request.url;
+
+      if ( filePath === "/" )
+         filePath = "./index.html";
+
+      extname = path.extname(filePath);
+
+      // Validate servable content types by extensions, 
+      // remove else return; to allow all types
+      if ( extensions[extname] !== undefined ){
+
+         contentType = extensions[extname];
+
+      } else {
+
+         return;
+
+      }            
+      
+      filePath = path.join('..', filePath);
+      fs.exists ( filePath, function ( exists ) {
+
+         //console.log(filePath);
+         if ( exists ) {
+
+            fs.readFile( filePath, function( error, content ) {
+               if ( error ) {
+                  // Error while loading existing content
+                  response.writeHead( 500 );
+                  response.end( '505', 'utf-8' );
+               } else {
+                  // Standard success scenario
+                  response.writeHead( 200, {'Content-Type': contentType} );
+                  response.end( content, 'utf-8' );
+               }
+            });
+
+         } else {
+            // Here you can print a generic page when path doesnt exist
+            response.writeHead( 404 );
+            response.end( '404', 'utf-8' );
+         }   
+
+      });   
+   };
+};
+
+module.exports = HttpService;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Game.html">Game</a></li><li><a href="GameBoard.html">GameBoard</a></li><li><a href="GameServer.html">GameServer</a></li><li><a href="HttpService.html">HttpService</a></li><li><a href="LocalStorage.html">LocalStorage</a></li><li><a href="Menu.html">Menu</a></li><li><a href="Socket.html">Socket</a></li><li><a href="Socket_.html">Socket(2)</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:socket:add_character">socket:add_character</a></li><li><a href="global.html#event:socket:add_player">socket:add_player</a></li><li><a href="global.html#event:socket:add_room">socket:add_room</a></li><li><a href="global.html#event:socket:add_user">socket:add_user</a></li><li><a href="global.html#event:socket:added_character">socket:added_character</a></li><li><a href="global.html#event:socket:added_player">socket:added_player</a></li><li><a href="global.html#event:socket:added_user">socket:added_user</a></li><li><a href="global.html#event:socket:connection">socket:connection</a></li><li><a href="global.html#event:socket:get_room_list">socket:get_room_list</a></li><li><a href="global.html#event:socket:get_user_list">socket:get_user_list</a></li><li><a href="global.html#event:socket:join_room">socket:join_room</a></li><li><a href="global.html#event:socket:kill_character">socket:kill_character</a></li><li><a href="global.html#event:socket:killed_character">socket:killed_character</a></li><li><a href="global.html#event:socket:leave_room">socket:leave_room</a></li><li><a href="global.html#event:socket:load_map">socket:load_map</a></li><li><a href="global.html#event:socket:loaded_map">socket:loaded_map</a></li><li><a href="global.html#event:socket:move_character">socket:move_character</a></li><li><a href="global.html#event:socket:moved_character">socket:moved_character</a></li><li><a href="global.html#event:socket:remove_room">socket:remove_room</a></li><li><a href="global.html#event:socket:remove_user">socket:remove_user</a></li><li><a href="global.html#event:socket:removed_player">socket:removed_player</a></li><li><a href="global.html#event:socket:resp_user">socket:resp_user</a></li><li><a href="global.html#event:socket:resp_user_list">socket:resp_user_list</a></li><li><a href="global.html#event:socket:update_players">socket:update_players</a></li><li><a href="global.html#event:socket:update_rooms">socket:update_rooms</a></li><li><a href="global.html#event:socket:used_player">socket:used_player</a></li><li><a href="global.html#event:window:load">window:load</a></li></ul><h3>Global</h3><ul><li><a href="global.html#extensions">extensions</a></li><li><a href="global.html#OBJECT_ENEMY_PROJECTILE">OBJECT_ENEMY_PROJECTILE</a></li><li><a href="global.html#OBJECT_PLAYER">OBJECT_PLAYER</a></li><li><a href="global.html#OBJECT_POWERUP">OBJECT_POWERUP</a></li><li><a href="global.html#OBJECT_TILE_COLLIDE">OBJECT_TILE_COLLIDE</a></li><li><a href="global.html#OBJECT_TILE_NO_COLLIDE">OBJECT_TILE_NO_COLLIDE</a></li><li><a href="global.html#PLAYER_SIZE">PLAYER_SIZE</a></li><li><a href="global.html#playGame">playGame</a></li><li><a href="global.html#pn">pn</a></li><li><a href="global.html#sprites">sprites</a></li><li><a href="global.html#startGame">startGame</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Thu Jan 02 2014 15:23:14 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

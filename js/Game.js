@@ -101,44 +101,48 @@ var sprites = {
  * @todo move sprites off client, and require them from server on asset loading
  * @todo rewrite gameCam to save memory on light-weight devices
  */
-var Game = new function () {
+var Game = function () {
 
-	/**
-	 * @public
-	 * @type {Array.<object>}
-	 */
-   this.screens = [];
-   this.gameCam = {x: 1920, y: 900, w: 0, h: 0, cols: 0, rows: 0, sc: 0, sr: 0, vx: 0, vy: 0};
-	/**
-	 * Used to determine mouse velocity
-	 * @public
-	 * @type {Array.<object>}
-	 */
-   this.oldRelPos = { x: 0, y: 0 };
-	/**
-	 * Used to track mouse down 
-	 * @public
-	 * @type {boolean}
-	 */
-   this.clicking = false;
    /**
-	 * Used to track mouse down and on the move 
-	 * @public
-	 * @type {boolean}
-	 */
+    * @public
+    * @type {Array.<object>}
+    */
+   this.screens = [];
+   
+   this.gameCam = {x: 1920, y: 900, w: 0, h: 0, cols: 0, rows: 0, sc: 0, sr: 0, vx: 0, vy: 0};
+   
+   /**
+    * Used to determine mouse velocity
+    * @public
+    * @type {Array.<object>}
+    */
+   this.oldRelPos = { x: 0, y: 0 };
+   
+   /**
+    * Used to track mouse down 
+    * @public
+    * @type {boolean}
+    */
+   this.clicking = false;
+   
+   /**
+    * Used to track mouse down and on the move 
+    * @public
+    * @type {boolean}
+    */
    this.dragging = false;
-	
-	/**
-	 * @public
-	 * @param num the key on which the screen is stored in the game
-	 * @param screen the screen that gets stored in the game
-	 */
+   
+   /**
+    * @public
+    * @param num the key on which the screen is stored in the game
+    * @param screen the screen that gets stored in the game
+    */
    this.setScreen = function(num, screen) { Game.screens[num] = screen; };
 
-	/**
-	 * @public
-	 * @function 
-	 */
+   /**
+    * @public
+    * @function 
+    */
    this.relMousePos = function (event) {
       if (event.offsetX !== undefined && event.offsetY !== undefined) {
          // IE9 + Chrome
@@ -149,27 +153,32 @@ var Game = new function () {
       }
    }
    
-	/**
-	 * @public
-	 * @param {DOMElement.id} canvasElementId
-	 * @param {object} sprite_data
-	 * @param {function} callback
-	 */
+   /**
+    * @public
+    * @param {DOMElement.id} canvasElementId
+    * @param {object} sprite_data
+    * @param {function} callback
+    */
    this.initialize = function (canvasElementId,sprite_data,callback) {
 
-      this.canvasOuter = document.getElementById(canvasElementId);
       // Set up the rendering context
+      this.canvasOuter = document.getElementById(canvasElementId);
       this.canvas = this.canvasOuter.getContext && this.canvasOuter.getContext('2d');
-      if(!this.canvas) { return alert("Please upgrade your browser to play"); }
-      
+
+      if(!this.canvas) {
+         return alert("Please upgrade your browser to play"); 
+      }
+   
       this.width = this.canvas.canvas.width = window.innerWidth;
       this.height = this.canvas.canvas.height = window.innerHeight;
+
       this.gameCam.w = this.width;
       this.gameCam.h = this.height;
       this.gameCam.cols = Math.floor(this.width/64)+2;
       this.gameCam.rows = Math.floor(this.height/64)+4;
-      this.gameCam.sc = Math.floor(Game.gameCam.x/64)-2;
-      this.gameCam.sr = Math.floor(Game.gameCam.y/64)-2; 
+      this.gameCam.sc = Math.floor(this.gameCam.x/64)-2;
+      this.gameCam.sr = Math.floor(this.gameCam.y/64)-2; 
+		
       this.counter = 0;
       this.board = new GameBoard();
       this.player = new Player();
@@ -177,76 +186,78 @@ var Game = new function () {
       this.messages = new GameBoard();
       this.socket = io.connect('http://fc.zacpez.com:9081');
 
-      $(Game.canvasOuter).bind("contextmenu",function(e){
+      $(pn.game.canvasOuter).bind("contextmenu",function(e){
          return false;
       });
-      $(Game.canvasOuter).mousedown( function (event) {
+      
+      $(pn.game.canvasOuter).mousedown( function (event) {
          event.preventDefault();
          if (event.which === 3) {
-            Game.dragging = true;
-            var mouse = Game.relMousePos(event);
-            Game.oldRelPos.x = mouse.x;
-            Game.oldRelPos.y = mouse.y;
+            pn.game.dragging = true;
+            var mouse = pn.game.relMousePos(event);
+            pn.game.oldRelPos.x = mouse.x;
+            pn.game.oldRelPos.y = mouse.y;
 
          } else if (event.which === 1) {
-            Game.clicking = true;
-            var mouse = Game.relMousePos(event);
-            var ox = mouse.x - mouse.x%64 + Game.gameCam.ox;
-            var oy = mouse.y - mouse.y%64 + Game.gameCam.oy;
-            var col = Math.floor(Game.gameCam.sc + mouse.x/64);
-            var row = Math.floor(Game.gameCam.sr + mouse.y/64);
-            Game.canvas.fillRect(ox,oy,64,64); //Draws a rectangular outline
+            pn.game.clicking = true;
+            var mouse = pn.game.relMousePos(event);
+            var ox = mouse.x - mouse.x%64 + pn.game.gameCam.ox;
+            var oy = mouse.y - mouse.y%64 + pn.game.gameCam.oy;
+            var col = Math.floor(pn.game.gameCam.sc + mouse.x/64);
+            var row = Math.floor(pn.game.gameCam.sr + mouse.y/64);
+            pn.game.canvas.fillRect(ox,oy,64,64); //Draws a rectangular outline
          } 
       });
-      $(Game.canvasOuter).mousemove( function (event) {
+      
+      $(pn.game.canvasOuter).mousemove( function (event) {
          event.preventDefault();
-         if (Game.dragging) {
-            var mouse = Game.relMousePos(event);
-            Game.gameCam.ox = -( 64 + Game.gameCam.x%64);
-            Game.gameCam.oy = -( 64 + Game.gameCam.y%64);
-            Game.gameCam.vx = (mouse.x - Game.oldRelPos.x);
-            Game.gameCam.vy = (mouse.y - Game.oldRelPos.y);
-            Game.gameCam.x = Game.gameCam.x - Game.gameCam.vx;
-            Game.gameCam.y = Game.gameCam.y - Game.gameCam.vy;
-            Game.gameCam.sc = Math.floor(Game.gameCam.x/64)-2;
-            Game.gameCam.sr = Math.floor(Game.gameCam.y/64)-2; 
-            Game.oldRelPos.x = mouse.x;
-            Game.oldRelPos.y = mouse.y;
+         if (pn.game.dragging) {
+            var mouse = pn.game.relMousePos(event);
+            pn.game.gameCam.ox = -( 64 + pn.game.gameCam.x%64);
+            pn.game.gameCam.oy = -( 64 + pn.game.gameCam.y%64);
+            pn.game.gameCam.vx = (mouse.x - pn.game.oldRelPos.x);
+            pn.game.gameCam.vy = (mouse.y - pn.game.oldRelPos.y);
+            pn.game.gameCam.x = pn.game.gameCam.x - pn.game.gameCam.vx;
+            pn.game.gameCam.y = pn.game.gameCam.y - pn.game.gameCam.vy;
+            pn.game.gameCam.sc = Math.floor(pn.game.gameCam.x/64)-2;
+            pn.game.gameCam.sr = Math.floor(pn.game.gameCam.y/64)-2; 
+            pn.game.oldRelPos.x = mouse.x;
+            pn.game.oldRelPos.y = mouse.y;
             //console.log("X: " + Game.gameCam.x + ", Y: " + Game.gameCam.y);
-         } else if (Game.clicking) {
+         } else if (pn.game.clicking) {
             // Start to build path
             //other event while not clicking left mouse button
-            var mouse = Game.relMousePos(event);
+            var mouse = pn.game.relMousePos(event);
             var ox = mouse.x - mouse.x%64;
             var oy = mouse.y - mouse.y%64;
-            var col = Math.floor(Game.gameCam.sc + mouse.x/64);
-            var row = Math.floor(Game.gameCam.sr + mouse.y/64);
-            Game.canvas.fillRect(ox,oy,64,64);
+            var col = Math.floor(pn.game.gameCam.sc + mouse.x/64);
+            var row = Math.floor(pn.game.gameCam.sr + mouse.y/64);
+            pn.game.canvas.fillRect(ox,oy,64,64);
          } else {
             //other event while not clicking left mouse button
-            var mouse = Game.relMousePos(event);
-            var ox = (mouse.x + Math.abs(Game.gameCam.x%64 - 64)) - mouse.x%64;
-            var oy = (mouse.y + Math.abs(Game.gameCam.y%64 - 64)) - mouse.y%64;
-            var col = Math.floor(Game.gameCam.sc + mouse.x/64);
-            var row = Math.floor(Game.gameCam.sr + mouse.y/64);
-            Game.canvas.strokeRect(ox,oy,64,64); //Draws a rectangular outline
+            var mouse = pn.game.relMousePos(event);
+            var ox = (mouse.x + Math.abs(pn.game.gameCam.x%64 - 64)) - mouse.x%64;
+            var oy = (mouse.y + Math.abs(pn.game.gameCam.y%64 - 64)) - mouse.y%64;
+            var col = Math.floor(pn.game.gameCam.sc + mouse.x/64);
+            var row = Math.floor(pn.game.gameCam.sr + mouse.y/64);
+            pn.game.canvas.strokeRect(ox,oy,64,64); //Draws a rectangular outline
             //console.log("col: " + col + ", row: " + row);
          }
       });
 
-      $(Game.canvasOuter).mouseup( function (event) {
+      $(pn.game.canvasOuter).mouseup( function (event) {
          event.preventDefault();
-         if (event.which === 1 && Game.players.length < Game.maxcharacters) {
+         if (event.which === 1 && pn.game.players.length < pn.game.maxcharacters) {
             // Add a character and send it through the sockets
             
          } else if (event.which === 1) {
             // Submit move given character here
          }
 
-         Game.clicking = false;
-         Game.dragging = false;
-         Game.gameCam.vx = 0;
-         Game.gameCam.vy = 0;
+         pn.game.clicking = false;
+         pn.game.dragging = false;
+         pn.game.gameCam.vx = 0;
+         pn.game.gameCam.vy = 0;
       });
       
       // Start the game loop
@@ -258,86 +269,75 @@ var Game = new function () {
    
    this.loop = function() {
       var dt = 30/1000;
-      for(var i=0, len = Game.screens.length;i<len;i++) {
-         if( Game.screens[i]) {
-            Game.screens[i].update(dt);
-            Game.screens[i] &&  Game.screens[i].draw(Game.canvas);
+      for(var i = 0, len = this.screens.length; i < len; i++) {
+         if( this.screens[i]) {
+            this.screens[i].update(dt);
+            this.screens[i] && this.screens[i].draw(this.canvas);
          }
       }
-      setTimeout(Game.loop,30);
-   }; 
-};
-
-/**
- * @todo To be made not global!!!
- */
-var playGame = function(oldMsg) {
-
-   Game.setScreen(5,Game.board); 
-   Game.messages.markToRemove(oldMsg);
-   Game.messages.add(new TitleScreen("Game Started", "Place your 5 characters"));
-   Game.setScreen(30,Game.messages);
-};
-/**
- * @todo To be made not global!!!
- */
-var startGame = function() {
-   var board = new GameBoard(); 
-	pn.socket.loadMap("World");
-	while( pn.localStorage.getArrayFromLocalStorage("World") === undefined ){
-		board.loadMap();
-	}
-	
-   // New player added here, data gathered and organized
-   Game.players = Game.socket.emit('add_player', {player: JSON.stringify(Game.player)});
-
-   
-   
-   for(var i= 0; i < 199; i++) {
-      for(var j = 0; j < 199; j++) {
-         var x = (-( 64 + Game.gameCam.x%64))+((i-Game.gameCam.sc)*64);
-         var y = (-( 64 + Game.gameCam.y%64))+((j-Game.gameCam.sr)*64);
-         console.log(i + "i, " + j +"j");
-         Game.board.add(new Tile(Game.board.map[i][j], x, y, i, j));
-         Game.counter += 1;
-         if (Game.board.map[i][j] == 2 && Math.random() > 0.9) {
-            Game.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
-            Game.counter += 1;
-         } else if (Game.board.map[i][j] == 2 && Math.random() > 0.9) {
-            Game.board.add(new Tile('tree2', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
-            Game.counter += 1;
-         }
-         if (Game.board.map[i][j] == 3 && Math.random() > 0.99) {
-            Game.board.add(new Tile('bush', x, y, i, j));
-            Game.counter += 1;
-         } else if (Game.board.map[i][j] == 3 && Math.random() > 0.99) {
-            Game.board.add(new Tile('bush2', x, y, i, j));
-            Game.counter += 1;
-         } else if (Game.board.map[i][j] == 3 && Math.random() > 0.7) {
-            Game.board.add(new Tile('grass', x, y, i, j));
-            Game.counter += 1;
-         }
-         if (Game.board.map[i][j] == 1 && Math.random() > 0.99) {
-            Game.board.add(new Tile('rock', x, y, i, j));
-            Game.counter += 1;
-         } else if (Game.board.map[i][j] == 1 && Math.random() > 0.95) {
-            Game.board.add(new Tile('smallrock', x, y, i, j));
-            Game.counter += 1;
-         }
-         if (Game.board.map[i][j] == 11 && Math.random() > 0.1) {
-            Game.board.add(new Tile('wheat', x, y, i, j));
-            Game.counter += 1;
-         }
-      }
+      setTimeout(this.loop,30);
    }
-   console.log(Game.counter);
-   Game.setScreen(5,Game.board); 
-   Game.messages.add(new TitleScreen("Project NaN","Left click to start playing",playGame));   
-   Game.setScreen(30,Game.messages);
-}
-/**
- * @todo To be move to other event listener on Main.js
- */
-window.addEventListener("load", function() {
-   Game.initialize("gamescreen",sprites,startGame);
-});
+   
+   this.play = function (oldMsg) {
+
+      this.setScreen(5, this.board); 
+      this.messages.markToRemove(oldMsg);
+      this.messages.add(new TitleScreen("Game Started", "Place your 5 characters"));
+      this.setScreen(30, this.messages);
+   }
+   
+   this.start = function() {
+      var board = new GameBoard(); 
+      pn.socket.loadMap("World", board.loadMap);
+      
+      // New player added here, data gathered and organized
+      this.players = this.socket.emit('add_player', {player: JSON.stringify(this.player)});
+      
+      for(var i= 0; i < 199; i++) {
+         for(var j = 0; j < 199; j++) {
+            var x = (-( 64 + this.gameCam.x%64)) + ((i - this.gameCam.sc) * 64);
+            var y = (-( 64 + this.gameCam.y%64)) + ((j - this.gameCam.sr) * 64);
+            console.log(i + "i, " + j +"j");
+            this.board.add(new Tile(this.board.map[i][j], x, y, i, j));
+            this.counter += 1;
+            
+            if (this.board.map[i][j] == 2 && Math.random() > 0.9) {
+               this.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+               this.counter += 1;
+            } else if (this.board.map[i][j] == 2 && Math.random() > 0.9) {
+               this.board.add(new Tile('tree2', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+               this.counter += 1;
+            }
+            
+            if (this.board.map[i][j] == 3 && Math.random() > 0.99) {
+               this.board.add(new Tile('bush', x, y, i, j));
+               this.counter += 1;
+            } else if (this.board.map[i][j] == 3 && Math.random() > 0.99) {
+               this.board.add(new Tile('bush2', x, y, i, j));
+               this.counter += 1;
+            } else if (this.board.map[i][j] == 3 && Math.random() > 0.7) {
+               this.board.add(new Tile('grass', x, y, i, j));
+               this.counter += 1;
+            }
+            
+            if (this.board.map[i][j] == 1 && Math.random() > 0.99) {
+               this.board.add(new Tile('rock', x, y, i, j));
+               this.counter += 1;
+            } else if (this.board.map[i][j] == 1 && Math.random() > 0.95) {
+               this.board.add(new Tile('smallrock', x, y, i, j));
+               this.counter += 1;
+            }
+            
+            if (this.board.map[i][j] == 11 && Math.random() > 0.1) {
+               this.board.add(new Tile('wheat', x, y, i, j));
+               this.counter += 1;
+            }
+         }
+      }
+      console.log(this.counter);
+      this.setScreen(5, this.board); 
+      this.messages.add(new TitleScreen("Project NaN", "Left click to start playing", this.play);   
+      this.setScreen(30, this.messages);
+   }
+};
+

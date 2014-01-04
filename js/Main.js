@@ -4,7 +4,13 @@
  * @type {object}
  * @name pn
  */
-var pn = {};
+var pn = {
+   "socket": {},
+   "menu": {},
+   "localStorage": {},
+   "game": {},
+   "player": {}
+};
 
 /**
  * @event window:load

@@ -97,30 +97,36 @@
          </a>
       </section>
       
-<!--    Server creation page for user to customize his/her game   -->
+<!--    Server creation page for user to customize their game   -->
       <section id="serversubmission">
          <h1>Create Server</h1>
          <label for="servername">Server Name: </label>
          <input type="text" id="servername" class="textfield"><br />
          <label for="serverpass">Server Password: </label>
          <input type="text" id="serverpass" clas-s="textfield"><br />
-         <label for="maptype">Map Type: </label>
-         <select id="maptype">
-            <option value="Plains">Plains</option>
-            <!--<option value="Desert">Desert</option>
-            <option value="Tundra">Tundra</option>-->
+         <label for="movecard">Move Card Size: </label>
+         <select id="movecard">
+            <option value="move1">5 Tiles per Move</option>
+            <option value="move2">9 Tiles per Move</option>
+            <option value="move3">15 Tiles per Move</option>
          </select><br />
-         <label for="mapsize">Map Size: </label>
-         <select id="mapsize">
-            <option value="size1">200 x 100 Tiles</option>
-            <!--<option value="size2">64 x 64 Tiles</option>
-            <option value="size3">128 x 128 Tiles</option>-->
+         <label for="maxgear">Gear Spawns: </label>
+         <select id="maxgear">
+            <option value="gear1">3 of each Gear</option>
+            <option value="gear2">5 of each Gear</option>
+            <option value="gear3">7 of each Gear</option>
          </select><br />
          <label for="playercount">Max Players: </label>
          <select id="playercount">
             <option value="two">2 Players</option>
             <option value="three">3 Players</option>
             <option value="four">4 Players</option>
+         </select><br />
+         <label for="charactercount">Max Characters: </label>
+         <select id="charactercount">
+            <option value="char1">4 Characters</option>
+            <option value="char2">6 Characters</option>
+            <option value="char3">8 Characters</option>
          </select><br />
          <a id="addserver" class="button" href="#">
             <span >Submit Server</span>

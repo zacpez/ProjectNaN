@@ -50,6 +50,14 @@ var GameServer = function ( socket ) {
    };
    
    /**
+    * @public
+    * @param {string} name
+    */
+   this.newRoom = function( room ) {
+	  return new Game(room);
+   };
+   
+   /**
     * @returns {string} this methods returns a stringified version on this object.
     */
    this.toString = function (){

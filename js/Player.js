@@ -1,6 +1,8 @@
 
 var Player = function (name) {
+
    var self = this;
+   
    this.name = name;
    this.characters = [];
    this.movements = [];
@@ -20,8 +22,8 @@ var Player = function (name) {
    }
 
    this.addCharacter = function (col, row, warlord) {
-      Game.characters.add(new Character(col, row, self.name, warlord));
-      Game.setScreen(10, Game.characters);
+      pn.game.characters.add(new Character(col, row, self.name, warlord));
+      pn.game.setScreen(10, Game.characters);
    }
 
    this.setPath = function () {

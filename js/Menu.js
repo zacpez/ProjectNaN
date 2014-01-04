@@ -1,32 +1,40 @@
 /**
  * @constructor
  * @class Menu
+ * @todo Add mouse click handling for server selection
  */
 function Menu() {
    /**
-	 * Stores the page name for page flipping
-	 * @protected
-	 * @type {string}
-	 */
+    * Stores the page name for page flipping
+    * @protected
+    * @type {string}
+    */
    var currPage;
-	
-	/**
-	 * Self reference when 'this' is not available
-	 * @protected
-	 * @type {Menu}
-	 */
+   
+   /**
+    * Used in server selection, so a client clear navigate and join the desired server clearly.
+    * @protected
+    * @type {string}
+    */
+   var serverSelection = "";
+   
+   /**
+    * Self reference when 'this' is not available
+    * @protected
+    * @type {Menu}
+    */
    var self = this;
 
-   this.loginDiv = $("#loginpages");          //// Login Div
+   this.loginDiv = $("#loginpages");          // Login Div
    this.Page1 = $("#page1");                  // Login Menu
    this.Page2 = $("#page2");                  // Login Page 
    this.Page3 = $("#page3");                  // 
-   this.Page4 = $("#page4");                    // Forgot User
+   this.Page4 = $("#page4");                  // Forgot User
    this.NewUser = $("#newUser");              // New user button
    this.ExistingUser = $("#existingUser");    // Existing user button
    this.LoginUser = $("#login");              // Login button
    this.ForgotUser = $("#forgot");            // Forgot user button
-   this.RecoverUser = $("#recover");          // Recover user button
+   this.RecoverUser = $("#recover");          // Recover user button   
    this.LoginExistUser = $("#loginexistuser");      
 
    this.ServerBrowser = $("#serverbrowser");  // Overall Server Browser
@@ -42,15 +50,15 @@ function Menu() {
    this.HighScores = $("#highscores");
    this.GameScreen = $("#gamearea");
 
-	/**
-	 * Write content to the server list table on the server browser page 
-	 * @public
-	 * @param rooms
-	 */
+   /**
+    * Write content to the server list table on the server browser page 
+    * @public
+    * @param rooms
+    */
    this.loadServers = function (rooms) {
       var i = 0;
       if (rooms.length === 0) {
-			console.log("no servers found");
+         console.log("no servers found");
          return;
       } 
     
@@ -97,14 +105,14 @@ function Menu() {
       }
    }
 
-	/**
-	 * Sets up the event listeners for the Menu's DOM elements. Utilizing currPage to page flip.
-	 * @public
-	 */
-   this.initialize = function (socket) {
+   /**
+    * Sets up the event listeners for the Menu's DOM elements. Utilizing currPage to page flip.
+    * @public
+    */
+   this.initialize = function () {
       currPage = this.Page1;
       var self = this;
-		
+      
       // Overall Pages
       this.ServerBrowser.css({display: "none"});
       this.HighScores.css({display: "none"});
@@ -132,56 +140,70 @@ function Menu() {
          self.Page2.css({display: "block"});
          currPage = self.Page2;
       });
+      
       this.ExistingUser.click(function () {
          currPage.css({display: "none"});
          self.Page3.css({display: "block"});
          currPage = self.Page3;
       });
+      
       this.LoginUser.click(function () {
          currPage.css({display: "none"});
          self.ServerBrowser.css({display: "block"});
-         Game.player.name = $('#newusername').value;
-			socket.addUser(Game.player);
+         pn.player.name = $('#newusername').val();
+         pn.socket.addUser(pn.player);
          currPage = self.SBR;
       });
+      
       this.ForgotUser.click(function () {
          currPage.css({display: "none"});
          self.Page4.css({display: "block"});
          currPage = self.Page4;
       });
+      
       this.RecoverUser.click(function () {
          currPage.css({display: "none"});
          self.Page1.css({display: "block"});
          currPage = self.Page1;
       });
+      
       this.LoginExistUser.click(function () {
          currPage.css({display: "none"});
          self.ServerBrowser.css({display: "block"});
-         Game.player.name = $('#existuser').value;
+         pn.player.name = $('#existuser').val();
          currPage = self.SBR;
       });
+      
       this.ExistingServer.click(function () {
          self.loadServers();
          currPage.css({display: "none"});
          self.ServerList.css({display: "block"});
          currPage = self.ServerList;
       });
+      
       this.NewServer.click(function () {
          currPage.css({display: "none"});
          self.ServerSub.css({display: "block"});
          currPage = self.ServerSub;
       });
+      
       this.AddServer.click(function () {
          currPage.css({display: "none"});
          self.ServerBrowser.css({display: "none"});
          self.GameScreen.css({display: "block"});
          currPage = self.GameScreen;
+         var room = {};
+         room.Name = $("#servername").val();
+         pn.socket.addRoom(room);
+         pn.socket.joinRoom(room);
       });
+      
       this.JoinHighlighted.click(function () {
          currPage.css({display: "none"});
          self.ServerBrowser.css({display: "none"});
          self.GameScreen.css({display: "block"});
          currPage = self.GameScreen;
+         pn.socket.joinRoom(serverSelection);
       });
    }
 }

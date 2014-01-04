@@ -131,10 +131,12 @@ var Socket = function (host) {
 	/**
 	 * @public
 	 * @param {object} mapName
+	 * @param {function} callback
 	 */
-	this.loadMap = function (mapName) {
+	this.loadMap = function (mapName, callback) {
 		self.server.emit('load_map', mapName);
 		console.log("sent req");
+		callback();
 	}
 	
 	/**
@@ -251,21 +253,27 @@ var Socket = function (host) {
 	});
 	
 	/**
-	 * @event socket:update_players
+	 * @event socket:updated_players
 	 * @param {object} user
 	 */
-	this.server.on('update_players', function (players) {
-		
+	this.server.on('updated_players', function (players) {
+		this.updatePlayers(players);
 	});
 	
 	/**
-	 * @event socket:update_rooms
+	 * @event socket:updated_rooms
 	 * @param {object} user
 	 */
-	this.server.on('update_rooms', function(rooms) {
+	this.server.on('updated_rooms', function(rooms) {
 		pn.localStorage.set('Servers', rooms);
 		pn.menu.loadServers(rooms);
 	});
+   
+   this.server.on('joined_room', function (players) {
+      pn.game = new Game();
+      pn.game.initialize("gamescreen", sprites, pn.game.play());
+      this.updatePlayers();
+   });
    
 	/**
 	 * @event socket:added_player

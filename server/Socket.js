@@ -16,7 +16,7 @@ var Socket = function () {
     * Used in the event handlers when disassociated from this Socket object
     * @private
     * @type {object} self reference where 'this' isn't possible.
-    * @TODO rewrite in a way that this variable is no longer needed, if possible.
+    * @todo rewrite in a way that this variable is no longer needed, if possible.
     */
    var self = this;
    
@@ -39,7 +39,7 @@ var Socket = function () {
     */
    this.initialize = function ( webService, gameServer ){
 
-	  webSocket = io.listen( parseInt(webService.port)+1 );
+	  webSocket = io.listen( webService );
       
       /**
        * This event is fired on individual connections, and sets up socket events.
@@ -63,8 +63,8 @@ var Socket = function () {
             socket.room = 'Lobby';
             socket.join('Lobby');
             socket.emit('added_user', gameServer.users);
-            socket.broadcast.to(socket.room).emit('updateplayers', gameServer.users);
-            socket.emit('updaterooms', gameServer.rooms, 'Lobby');
+            socket.broadcast.to(socket.room).emit('updated_players', gameServer.users);
+            socket.emit('updated_rooms', gameServer.rooms, 'Lobby');
          });
          
     	 /**
@@ -74,8 +74,8 @@ var Socket = function () {
     	  */
          socket.on('remove_user', function ( user ){
             delete gameServer.users[ user ];
-            io.socket.emit('updateplayers', gameServer.users);
-            socket.broadcast.to(socket.room).emit('updateplayers', gameServer.users);
+            io.socket.emit('updated_players', gameServer.users);
+            socket.broadcast.to(socket.room).emit('updated_players', gameServer.users);
             socket.leave(socket.room);
          });
          
@@ -85,7 +85,7 @@ var Socket = function () {
     	  * @param {function} Callback method when the socket event is called.
     	  */
          socket.on('get_user_list', function ( users ){
-            socket.emit('updateplayers', gameServer.users);
+            socket.emit('updated_players', gameServer.users);
          });
          
     	 /**
@@ -94,7 +94,7 @@ var Socket = function () {
     	  * @param {function} Callback method when the socket event is called.
     	  */
          socket.on('get_room_list', function (){
-             socket.emit('updaterooms', gameServer.rooms);
+             socket.emit('updated_rooms', gameServer.rooms);
           });
          
     	 /**
@@ -106,9 +106,10 @@ var Socket = function () {
          socket.on('add_room', function ( room ){
         	room = gameServer.newRoom( room );
         	gameServer.rooms.push( room );
-            socket.room = room;
-            socket.join(room);
-            socket.emit('updaterooms', gameServer.rooms);
+        	room.map = self.getFile("../data/World.json");
+            socket.room = room.name;
+            socket.join(room.name);
+            socket.emit('updated_rooms', gameServer.rooms);
          });
          
     	 /**
@@ -117,11 +118,14 @@ var Socket = function () {
     	  * @param {function} Callback method when the socket event is called.
     	  */
          socket.on('join_room', function ( room ){
-            if( gameServer.rooms[room] !== undefined ) return;
-            socket.room = room;
-            socket.join(room);
+            if( gameServer.rooms[room.name] !== undefined ) {
+            	console.log("Non-existant room access denied");
+            	return;
+            }
+            socket.room = room.name;
+            socket.join(room.name);
             gameServer.rooms.users[socket.username] = socket.username;
-            socket.broadcast.to(socket.room).emit('updateplayers', gameServer.users);
+            socket.broadcast.to(socket.room).emit('updated_players', gameServer.users);
          });
          
     	 /**
@@ -131,12 +135,12 @@ var Socket = function () {
     	  */
          socket.on('leave_room', function ( room ){
         	gameServer.rooms[room.name] = room;
-            var oldRoom = socket.room;
+            var oldRoom = socket.room.name;
             socket.leave(socket.room);
             socket.join('Lobby');
-            socket.broadcast.to(oldRoom).emit('updateplayers', gameServer.users);
+            socket.broadcast.to(oldRoom).emit('updated_players', gameServer.users);
             socket.room = 'Lobby';
-            socket.emit('updaterooms', gameServer.rooms);
+            socket.emit('updated_rooms', gameServer.rooms);
          });
          
     	 /**
@@ -146,7 +150,7 @@ var Socket = function () {
     	  */
          socket.on('remove_room', function ( room ){
         	gameServer.rooms.remove( room );
-            socket.emit('removeroom', gameServer.rooms, room);
+            socket.emit('remove_room', gameServer.rooms, room);
          });
          
     	 /**
@@ -155,10 +159,11 @@ var Socket = function () {
     	  * @param {function} Callback method when the socket event is called.
     	  */
          socket.on('load_map', function(mapName){
-        	console.log("map request");
+        	console.log("map request: "+ mapName);
         	var response = {};
         	response.name = mapName;
-        	response.map = self.getFile("data/World.json");
+        	response.map = self.getFile("../data/World.json");
+        	console.log(response.map);
         	socket.emit('loaded_map', response);
          });
          

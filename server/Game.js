@@ -1,18 +1,29 @@
-
-var Game = new function (maxplayers, maxcharacters, movementDistance) {
+/**
+ * @constructor
+ * @class Game
+ * @param {object} roomInfo
+ * @param {integer} maxplayers
+ * @param {integer} maxcharacters
+ * @param {integer} movementDistance
+ */
+var Game = function (roomInfo) {
+	
    var rules = this;
+   
    this.currentPlayer = 0;
    this.players = [];
    this.spectators = [];
    this.equipment = [];
-   this.maxplayers = maxplayers;
-   this.maxcharacters = maxcharacters;
-   this.movementDistance = movementDistance;
-   this.maxmoutaingear = 7;
-   this.maxforestgear = 7;
-   this.maxwatergear = 7;
-   this.maxfightgear = 7;
-   this.world = require('../data/World.json');
+   this.name = roomInfo.name;
+   this.name = roomInfo.pass;
+   this.maxplayers = roomInfo.maxPlayers;
+   this.maxcharacters = roomInfo.maxcharacters;
+   this.movementDistance = roomInfo.movementDistance;
+   this.maxmoutaingear = roomInfo.maxGear;
+   this.maxforestgear = roomInfo.maxGear;
+   this.maxwatergear = roomInfo.maxGear;
+   this.maxfightgear = roomInfo.maxGear;
+   this.world = roomInfo.map;
    
    this.events = [];
    

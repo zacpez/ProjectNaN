@@ -10,4 +10,4 @@ var gameServer = new GameServer();
 gameServer.initialize();
 
 var socket = new WebSocket();
-socket.initialize( server, gameServer );
+socket.initialize( server.http, gameServer );

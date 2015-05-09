@@ -24,7 +24,7 @@ $(window).load(function () {
    //if (database.init()) {
    //   var serverList = database.getServerList();
    //}
-   pn.socket = new Socket('http://fc.zacpez.com:9082');
+   pn.socket = new Socket('localhost:9081');
    pn.menu = new Menu();
    pn.menu.initialize(pn.socket);
 	pn.localStorage = new LocalStorage();

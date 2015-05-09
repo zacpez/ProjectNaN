@@ -336,7 +336,7 @@ var Game = function () {
       }
       console.log(this.counter);
       this.setScreen(5, this.board); 
-      this.messages.add(new TitleScreen("Project NaN", "Left click to start playing", this.play);   
+      this.messages.add(new TitleScreen("Project NaN", "Left click to start playing", this.play));   
       this.setScreen(30, this.messages);
    }
 };

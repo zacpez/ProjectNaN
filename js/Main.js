@@ -16,10 +16,6 @@ var pn = {
  * @event window:load
  */
 $(window).load(function () {
-   
-   //var game = new Game();
-   //game.init();
-   
    //var database = new Database();
    //if (database.init()) {
    //   var serverList = database.getServerList();
@@ -29,5 +25,7 @@ $(window).load(function () {
    pn.menu.initialize(pn.socket);
 	pn.localStorage = new LocalStorage();
    pn.localStorage.initialize();
+   pn.game = new Game();
+   pn.game.initialize("gamescreen", pn.game.start);
 });   
 

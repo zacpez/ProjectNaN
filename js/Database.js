@@ -21,7 +21,6 @@ var Database = new function () {
    }
    
    this.load = function (url, data) {
-   
       try {
          var ajax = new XMLHttpRequest();
          ajax.open("GET", url);
@@ -48,7 +47,6 @@ var Database = new function () {
    
    this.addServer = function () {
       var url = "addServer.php"+ "?random=" + (new Date()).getTime();   
-      
       try
       {
          var ajax = new XMLHttpRequest();

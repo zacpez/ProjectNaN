@@ -135,6 +135,7 @@ var Socket = function (host) {
 	 */
 	this.loadMap = function (mapName, callback) {
 		self.server.emit('load_map', mapName);
+		pn.game.board.loadMap();
 		console.log("sent req");
 		callback();
 	}

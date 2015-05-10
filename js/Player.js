@@ -8,7 +8,7 @@ var Player = function (name) {
    this.movements = [];
    this.isWarlord = 1;
 
-   this.init = function () {
+   this.initialize = function () {
       self.setMovements();
    }
 

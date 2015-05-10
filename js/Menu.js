@@ -195,7 +195,6 @@ function Menu() {
          var room = {};
          room.Name = $("#servername").val();
          pn.socket.addRoom(room);
-         pn.socket.joinRoom(room);
       });
       
       this.JoinHighlighted.click(function () {

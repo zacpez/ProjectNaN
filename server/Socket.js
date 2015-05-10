@@ -1,6 +1,7 @@
 var io = require('socket.io'),
 	fs = require('fs'),
-    EventRegistry = require('./eventregistry');
+    EventRegistry = require('./eventregistry'),
+    world = require('../data/World.json');
 
 /**
  * Socket is a web socket module acting as the primary server for all the game related services.
@@ -106,7 +107,7 @@ var Socket = function () {
          socket.on('add_room', function ( room ){
         	room = gameServer.newRoom( room );
         	gameServer.rooms.push( room );
-        	room.map = self.getFile("../data/World.json");
+        	room.map = world;
             socket.room = room.name;
             socket.join(room.name);
             socket.emit('updated_rooms', gameServer.rooms);
@@ -162,8 +163,7 @@ var Socket = function () {
         	console.log("map request: "+ mapName);
         	var response = {};
         	response.name = mapName;
-        	response.map = self.getFile("../data/World.json");
-        	console.log(response.map);
+        	response.map = world;
         	socket.emit('loaded_map', response);
          });
          

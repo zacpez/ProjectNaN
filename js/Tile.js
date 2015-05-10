@@ -9,8 +9,8 @@ var Tile = function(texture, x, y, r, c) {
    this.col = c;
       
    this.update = function(dt) {   
-      this.x = this.x + Game.gameCam.vx*8;
-      this.y = this.y + Game.gameCam.vy*8;
+      this.x = this.x + pn.game.gameCam.vx*8;
+      this.y = this.y + pn.game.gameCam.vy*8;
       if (this.texture == 20) {
         // animate water here
       }   

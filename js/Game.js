@@ -137,7 +137,7 @@ var Game = function () {
     * @param num the key on which the screen is stored in the game
     * @param screen the screen that gets stored in the game
     */
-   this.setScreen = function(num, screen) { Game.screens[num] = screen; };
+   this.setScreen = function(num, screen) { pn.game.screens[num] = screen; };
 
    /**
     * @public
@@ -159,7 +159,7 @@ var Game = function () {
     * @param {object} sprite_data
     * @param {function} callback
     */
-   this.initialize = function (canvasElementId,sprite_data,callback) {
+   this.initialize = function (canvasElementId,callback) {
 
       // Set up the rendering context
       this.canvasOuter = document.getElementById(canvasElementId);
@@ -184,7 +184,6 @@ var Game = function () {
       this.player = new Player();
       this.players = new GameBoard();
       this.messages = new GameBoard();
-      this.socket = io.connect('http://fc.zacpez.com:9081');
 
       $(pn.game.canvasOuter).bind("contextmenu",function(e){
          return false;
@@ -264,80 +263,78 @@ var Game = function () {
       this.loop();
 
       // Load the sprite sheet and pass forward the callback.
-      SpriteSheet.load(sprite_data,callback);
+      SpriteSheet.load(sprites,callback);
+
+      this.board = new GameBoard(); 
+      pn.socket.loadMap("World", pn.game.start);
    }
    
    this.loop = function() {
       var dt = 30/1000;
-      for(var i = 0, len = this.screens.length; i < len; i++) {
-         if( this.screens[i]) {
-            this.screens[i].update(dt);
-            this.screens[i] && this.screens[i].draw(this.canvas);
+      for(var i = 0, len = pn.game.screens.length; i < len; i++) {
+         if( pn.game.screens[i]) {
+            pn.game.screens[i].update(dt);
+            pn.game.screens[i] && pn.game.screens[i].draw(pn.game.canvas);
          }
       }
-      setTimeout(this.loop,30);
+      setTimeout(pn.game.loop,30);
    }
    
    this.play = function (oldMsg) {
-
       this.setScreen(5, this.board); 
       this.messages.markToRemove(oldMsg);
       this.messages.add(new TitleScreen("Game Started", "Place your 5 characters"));
       this.setScreen(30, this.messages);
    }
    
-   this.start = function() {
-      var board = new GameBoard(); 
-      pn.socket.loadMap("World", board.loadMap);
-      
-      // New player added here, data gathered and organized
-      this.players = this.socket.emit('add_player', {player: JSON.stringify(this.player)});
+   this.start = function() {      
+      pn.socket.addUser('add_player', {player: JSON.stringify(pn.game.player)});
       
       for(var i= 0; i < 199; i++) {
          for(var j = 0; j < 199; j++) {
-            var x = (-( 64 + this.gameCam.x%64)) + ((i - this.gameCam.sc) * 64);
-            var y = (-( 64 + this.gameCam.y%64)) + ((j - this.gameCam.sr) * 64);
-            console.log(i + "i, " + j +"j");
-            this.board.add(new Tile(this.board.map[i][j], x, y, i, j));
-            this.counter += 1;
+            var x = (-( 64 + pn.game.gameCam.x%64)) + ((i - pn.game.gameCam.sc) * 64);
+            var y = (-( 64 + pn.game.gameCam.y%64)) + ((j - pn.game.gameCam.sr) * 64);
+            //console.log(i + "i, " + j +"j");
+            pn.game.board.add(new Tile(pn.game.board.map[i][j], x, y, i, j));
+            pn.game.counter += 1;
             
-            if (this.board.map[i][j] == 2 && Math.random() > 0.9) {
-               this.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
-               this.counter += 1;
-            } else if (this.board.map[i][j] == 2 && Math.random() > 0.9) {
-               this.board.add(new Tile('tree2', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
-               this.counter += 1;
+            if (pn.game.board.map[i][j] == 2 && Math.random() > 0.9) {
+               pn.game.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+               pn.game.counter += 1;
+            } else if (pn.game.board.map[i][j] == 2 && Math.random() > 0.9) {
+               pn.game.board.add(new Tile('tree2', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+               pn.game.counter += 1;
             }
             
-            if (this.board.map[i][j] == 3 && Math.random() > 0.99) {
-               this.board.add(new Tile('bush', x, y, i, j));
-               this.counter += 1;
-            } else if (this.board.map[i][j] == 3 && Math.random() > 0.99) {
-               this.board.add(new Tile('bush2', x, y, i, j));
-               this.counter += 1;
-            } else if (this.board.map[i][j] == 3 && Math.random() > 0.7) {
-               this.board.add(new Tile('grass', x, y, i, j));
-               this.counter += 1;
+            if (pn.game.board.map[i][j] == 3 && Math.random() > 0.99) {
+               pn.game.board.add(new Tile('bush', x, y, i, j));
+               pn.game.counter += 1;
+            } else if (pn.game.board.map[i][j] == 3 && Math.random() > 0.99) {
+               pn.game.board.add(new Tile('bush2', x, y, i, j));
+               pn.game.counter += 1;
+            } else if (pn.game.board.map[i][j] == 3 && Math.random() > 0.7) {
+               pn.game.board.add(new Tile('grass', x, y, i, j));
+               pn.game.counter += 1;
             }
             
-            if (this.board.map[i][j] == 1 && Math.random() > 0.99) {
-               this.board.add(new Tile('rock', x, y, i, j));
-               this.counter += 1;
-            } else if (this.board.map[i][j] == 1 && Math.random() > 0.95) {
-               this.board.add(new Tile('smallrock', x, y, i, j));
-               this.counter += 1;
+            if (pn.game.board.map[i][j] == 1 && Math.random() > 0.99) {
+               pn.game.board.add(new Tile('rock', x, y, i, j));
+               pn.game.counter += 1;
+            } else if (pn.game.board.map[i][j] == 1 && Math.random() > 0.95) {
+               pn.game.board.add(new Tile('smallrock', x, y, i, j));
+               pn.game.counter += 1;
             }
             
-            if (this.board.map[i][j] == 11 && Math.random() > 0.1) {
-               this.board.add(new Tile('wheat', x, y, i, j));
-               this.counter += 1;
+            if (pn.game.board.map[i][j] == 11 && Math.random() > 0.1) {
+               pn.game.board.add(new Tile('wheat', x, y, i, j));
+               pn.game.counter += 1;
             }
          }
       }
-      console.log(this.counter);
-      this.setScreen(5, this.board); 
-      this.messages.add(new TitleScreen("Project NaN", "Left click to start playing", this.play));   
-      this.setScreen(30, this.messages);
+      console.log(pn.game.counter);
+      pn.game.setScreen(5, pn.game.board); 
+      pn.game.messages.add(new TitleScreen("Project NaN", "Left click to start playing", pn.game.play));   
+      pn.game.setScreen(30, pn.game.messages);
    }
 };
 

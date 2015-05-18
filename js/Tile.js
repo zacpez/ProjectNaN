@@ -1,23 +1,46 @@
-//Tile.js
+/**
+ * @constructor Creates Tile
+ * @class Tile
+ * @param {String} texture - Reference item in image
+ * @param {Number} x - X coordinate to start rendering at
+ * @param {Number} y - Y coordinate to start rendering at
+ * @param {Number} r - Row number
+ * @param {Number} c - Column number
+ */
 var Tile = function(texture, x, y, r, c) {
+
    this.texture = texture;
    this.w = SpriteSheet.map[texture].w;
    this.h = SpriteSheet.map[texture].h;
-   this.x = x;
-   this.y = y;   
-   this.row = r;
-   this.col = c;
+   this.position = new pn.Vector2(x, y);
+   this.tile = new pn.Vector2(c, r);
       
+   /**
+    * Alter position of texture
+    * @public
+    * @method
+    * @name update
+    * @param {Number} dt - Detla time for animation timing.
+    */
    this.update = function(dt) {   
-      this.x = this.x + pn.game.gameCam.vx*8;
-      this.y = this.y + pn.game.gameCam.vy*8;
+      this.position.add(
+         pn.game.gameCam.getVelocity().x,
+         pn.game.gameCam.getVelocity().y
+      );
       if (this.texture == 20) {
-        // animate water here
+         // animate water here
       }   
 
    };
    
+   /**
+    * Dispatch the drawing to the SpriteSheet
+    * @public
+    * @method
+    * @name draw
+    * @param {DOMNode} ctx - Reference to the canvas in the DOM
+    */
    this.draw = function(ctx) {
-      SpriteSheet.draw(ctx,this.texture,this.x,this.y);
+      SpriteSheet.draw(ctx, this.texture, this.position.x, this.position.y);
    };
 }

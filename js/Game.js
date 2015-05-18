@@ -34,6 +34,19 @@ OBJECT_POWERUP = 16,
  * @default 32
  */
 PLAYER_SIZE = 32,
+/**
+ * @global
+ * @constant {integer} TILE_SIZE
+ * @default 64
+ */
+TILE_SIZE = 64,
+/**
+ * Used to render extra tiles around the border of the camera
+ * @global
+ * @constant {integer} EDGE_BUFFER
+ * @default 2
+ */
+EDGE_BUFFER = 2,
 
 /**
  * Percentages for sprite generation on the map.
@@ -41,6 +54,8 @@ PLAYER_SIZE = 32,
  * @enum {float} GENERATION
  */
 GENERATION = {
+   WIDTH: 199,
+   HEIGHT: 199,
    TREE:  0.9,
    TREE2: 0.9,
    BUSH:  0.99,
@@ -67,122 +82,122 @@ sprites = {
        * Bottom left tin roof
        * @inner
        */
-      32: { sx: 0, sy: 0, w: 64, h: 64, frames: 1 },
+      32: { sx: 0, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Bottom right tin roof
        * @inner
        */
-      29: { sx: 64, sy: 0, w: 64, h: 64, frames: 1 },
+      29: { sx: 64, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Cave floor
        * @inner
        */
-      19: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 },
+      19: { sx: 0, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Cocaine
        * @inner
        */
-      4: { sx: 64, sy: 64, w: 64, h: 64, frames: 1 },
+      4: { sx: 64, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Concrete
        * @inner
        */
-      20: { sx: 128, sy: 0, w: 64, h: 64, frames: 1 },
+      20: { sx: 128, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Broken Concrete
        * @inner
        */
-      5: { sx: 128, sy: 64, w: 64, h: 64, frames: 1 },
+      5: { sx: 128, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Bottom left fence
        * @inner
        */
-      25: { sx: 192, sy: 0, w: 64, h: 64, frames: 1 },
+      25: { sx: 192, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Bottom right fence
        * @inner
        */
-      26: { sx: 192, sy: 64, w: 64, h: 64, frames: 1 },
+      26: { sx: 192, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Horizontal fence
        * @inner
        */
-      22: {  sx: 128, sy: 128, w: 64, h: 64, frames: 1 },
+      22: {  sx: 128, sy: 128, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Top left fence
        * @inner
        */
-      23: { sx: 0, sy: 192, w: 64, h: 64, frames: 1 },
+      23: { sx: 0, sy: 192, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Top right fence
        * @inner
        */
-      24: { sx: 64, sy: 128, w: 64, h: 64, frames: 1 },
+      24: { sx: 64, sy: 128, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Vertical fence
        * @inner
        */
-      21: { sx: 0, sy: 128, w: 64, h: 64, frames: 1 },
+      21: { sx: 0, sy: 128, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Forest
        * @inner
        */
-      2: { sx: 64, sy: 192, w: 64, h: 64, frames: 1 },
+      2: { sx: 64, sy: 192, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Grass
        * @inner
        */
-      3: { sx: 128, sy: 192, w: 64, h: 64, frames: 1 },
+      3: { sx: 128, sy: 192, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Horizonal tin roof, ripple in
        * @inner
        */
-      33: {  sx: 320, sy: 192, w: 64, h: 64, frames: 1 },
+      33: {  sx: 320, sy: 192, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Horizonal tin roof, ripple out
        * @inner
        */
-      27: { sx: 192, sy: 128, w: 64, h: 64, frames: 1 },
+      27: { sx: 192, sy: 128, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * House floor
        * @inner
        */
-      18: { sx: 192, sy: 192, w: 64, h: 64, frames: 1 },
+      18: { sx: 192, sy: 192, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Lake water
        * @inner
        */
-      14: { sx: 256, sy: 0, w: 64, h: 64, frames: 1 },
+      14: { sx: 256, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Long Grass
        * @inner
        */
-      longgrass: { sx: 320, sy: 0, w: 64, h: 64, frames: 1 },
+      longgrass: { sx: 320, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Mountain stone
        * @inner
        */
-      1: { sx: 256, sy: 64, w: 64, h: 64, frames: 1 },
+      1: { sx: 256, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Ocean Water
        * @inner
        */
-      15: { sx: 384, sy: 0, w: 64, h: 64, frames: 1 },
+      15: { sx: 384, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Basic Path
        * @inner
        */
-      16: { sx: 320, sy: 64, w: 64, h: 64, frames: 1 },
+      16: { sx: 320, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Basic Path 2
        * @inner
        */
-      11: { sx: 256, sy: 128, w: 64, h: 64, frames: 1 },
+      11: { sx: 256, sy: 128, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Pebels
        * @inner
        */
-      13: { sx: 320, sy: 128, w: 64, h: 64, frames: 1 },
+      13: { sx: 320, sy: 128, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Playable character
        * @inner
@@ -197,32 +212,32 @@ sprites = {
        * Road
        * @inner
        */
-      17: { sx: 256, sy: 192, w: 64, h: 64, frames: 1 },
+      17: { sx: 256, sy: 192, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Sand
        * @inner
        */
-      12: { sx: 384, sy: 64, w: 64, h: 64, frames: 1 },
+      12: { sx: 384, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Top left tin roof
        * @inner
        */
-      31: { sx: 448, sy: 0, w: 64, h: 64, frames: 1 },
+      31: { sx: 448, sy: 0, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Top right tin roof
        * @inner
        */
-      30: { sx: 448, sy: 64, w: 64, h: 64, frames: 1 },
+      30: { sx: 448, sy: 64, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Vertical roof ripple in
        * @inner
        */
-      34: { sx: 384, sy: 192, w: 64, h: 64, frames: 1 },
+      34: { sx: 384, sy: 192, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Vertical roof ripple out
        * @inner
        */
-      28: { sx: 384, sy: 128, w: 64, h: 64, frames: 1 },
+      28: { sx: 384, sy: 128, w: TILE_SIZE, h: TILE_SIZE, frames: 1 },
       /**
        * Tree sprite
        * @inner
@@ -237,52 +252,52 @@ sprites = {
        * Grass sprite
        * @inner
        */
-      grass: {sx: 448, sy: 192 , w: 64, h: 64, frames: 1},
+      grass: {sx: 448, sy: 192 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Bush sprite
        * @inner
        */
-      bush: {sx: 448, sy: 256 , w: 64, h: 64, frames: 1},
+      bush: {sx: 448, sy: 256 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Bush 2 sprite
        * @inner
        */
-      bush2: {sx: 448, sy: 320 , w: 64, h: 64, frames: 1},
+      bush2: {sx: 448, sy: 320 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Rock sprite
        * @inner
        */
-      rock: {sx: 384, sy: 256 , w: 64, h: 64, frames: 1}, 
+      rock: {sx: 384, sy: 256 , w: TILE_SIZE, h: TILE_SIZE, frames: 1}, 
       /**
        * Small rock sprite
        * @inner
        */
-      smallrock: {sx: 320, sy: 256 , w: 64, h: 64, frames: 1},
+      smallrock: {sx: 320, sy: 256 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Wheat sprite
        * @inner
        */
-      wheat: {sx: 256, sy: 256 , w: 64, h: 64, frames: 1},
+      wheat: {sx: 256, sy: 256 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Item: Rope sprite
        * @inner
        */
-      rope: {sx: 128, sy: 256 , w: 64, h: 64, frames: 1},
+      rope: {sx: 128, sy: 256 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Item: Boots sprite
        * @inner
        */
-      boots: {sx: 192, sy: 256 , w: 64, h: 64, frames: 1},
+      boots: {sx: 192, sy: 256 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Item: boat sprite
        * @inner
        */
-      boat: {sx: 128, sy: 320 , w: 64, h: 64, frames: 1},
+      boat: {sx: 128, sy: 320 , w: TILE_SIZE, h: TILE_SIZE, frames: 1},
       /**
        * Item: weapons sprite
        * @inner
        */
-      weapons: {sx: 192, sy: 320 , w: 64, h: 64, frames: 1}
+      weapons: {sx: 192, sy: 320 , w: TILE_SIZE, h: TILE_SIZE, frames: 1}
    },
   /**
    * Source image filename
@@ -311,14 +326,14 @@ var Game = function () {
     */
    this.screens = [];
    
-   this.gameCam = {x: 1920, y: 900, w: 0, h: 0, cols: 0, rows: 0, sc: 0, sr: 0, vx: 0, vy: 0};
+   this.gameCam = new pn.GameCam();
    
    /**
     * Used to determine mouse velocity
     * @public
     * @type {Array.<object>}
     */
-   this.oldRelPos = { x: 0, y: 0 };
+   this.oldRelPos = new pn.Vector2();
    
    /**
     * Used to track mouse down 
@@ -348,9 +363,9 @@ var Game = function () {
    this.relMousePos = function (event) {
       if (event.offsetX !== undefined && event.offsetY !== undefined) {
          // IE9 + Chrome
-          return { x: event.offsetX, y: event.offsetY };
+         return { x: event.offsetX, y: event.offsetY };
       } else {
-          // Firefox
+         // Firefox
          return { x: event.layerX, y: event.layerY };
       }
    }
@@ -374,13 +389,17 @@ var Game = function () {
       this.width = this.canvas.canvas.width = window.innerWidth;
       this.height = this.canvas.canvas.height = window.innerHeight;
 
-      this.gameCam.w = this.width;
-      this.gameCam.h = this.height;
-      this.gameCam.cols = Math.floor(this.width/64)+2;
-      this.gameCam.rows = Math.floor(this.height/64)+4;
-      this.gameCam.sc = Math.floor(this.gameCam.x/64)-2;
-      this.gameCam.sr = Math.floor(this.gameCam.y/64)-2; 
-		
+      this.gameCam.setPos(1920,900);
+      this.gameCam.setDimensions(this.width, this.height);
+      this.gameCam.setTiles(
+         Math.floor(this.width / TILE_SIZE) + EDGE_BUFFER,
+         Math.floor(this.height / TILE_SIZE) + EDGE_BUFFER
+      );
+      this.gameCam.setSourceTile(
+         Math.floor(this.gameCam.getPos().x / TILE_SIZE) - EDGE_BUFFER,
+         Math.floor(this.gameCam.getPos().y / TILE_SIZE) - EDGE_BUFFER
+      ); 
+
       this.counter = 0;
       this.board = new GameBoard();
       this.player = new Player();
@@ -396,17 +415,13 @@ var Game = function () {
          if (event.which === 3) {
             pn.game.dragging = true;
             var mouse = pn.game.relMousePos(event);
-            pn.game.oldRelPos.x = mouse.x;
-            pn.game.oldRelPos.y = mouse.y;
+            pn.game.oldRelPos.set(mouse.x, mouse.y);
 
          } else if (event.which === 1) {
             pn.game.clicking = true;
             var mouse = pn.game.relMousePos(event);
-            var ox = mouse.x - mouse.x%64 + pn.game.gameCam.ox;
-            var oy = mouse.y - mouse.y%64 + pn.game.gameCam.oy;
-            var col = Math.floor(pn.game.gameCam.sc + mouse.x/64);
-            var row = Math.floor(pn.game.gameCam.sr + mouse.y/64);
-            pn.game.canvas.fillRect(ox,oy,64,64); //Draws a rectangular outline
+            var offset = new pn.Vector2(mouse.x - (mouse.x % TILE_SIZE), mouse.y - (mouse.y % TILE_SIZE));
+            pn.game.canvas.fillRect(offset.x, offset.y, TILE_SIZE, TILE_SIZE); //Draws a rectangular outline
          } 
       });
       
@@ -414,35 +429,32 @@ var Game = function () {
          event.preventDefault();
          if (pn.game.dragging) {
             var mouse = pn.game.relMousePos(event);
-            pn.game.gameCam.ox = -( 64 + pn.game.gameCam.x%64);
-            pn.game.gameCam.oy = -( 64 + pn.game.gameCam.y%64);
-            pn.game.gameCam.vx = (mouse.x - pn.game.oldRelPos.x);
-            pn.game.gameCam.vy = (mouse.y - pn.game.oldRelPos.y);
-            pn.game.gameCam.x = pn.game.gameCam.x - pn.game.gameCam.vx;
-            pn.game.gameCam.y = pn.game.gameCam.y - pn.game.gameCam.vy;
-            pn.game.gameCam.sc = Math.floor(pn.game.gameCam.x/64)-2;
-            pn.game.gameCam.sr = Math.floor(pn.game.gameCam.y/64)-2; 
-            pn.game.oldRelPos.x = mouse.x;
-            pn.game.oldRelPos.y = mouse.y;
-            //console.log("X: " + Game.gameCam.x + ", Y: " + Game.gameCam.y);
+            pn.game.gameCam.setSourcePixel(
+               -( TILE_SIZE - (pn.game.gameCam.getPos().x % TILE_SIZE)),
+               -( TILE_SIZE - (pn.game.gameCam.getPos().y % TILE_SIZE))
+            );
+            pn.game.gameCam.setVelocity(
+               mouse.x - pn.game.oldRelPos.x,
+               mouse.y - pn.game.oldRelPos.y
+            );
+            pn.game.gameCam.setSourceTile(
+               Math.floor(pn.game.gameCam.getPos().x / TILE_SIZE) - EDGE_BUFFER,
+               Math.floor(pn.game.gameCam.getPos().y / TILE_SIZE) - EDGE_BUFFER
+            );
+            pn.game.oldRelPos.set(mouse.x, mouse.y);
+
          } else if (pn.game.clicking) {
             // Start to build path
-            //other event while not clicking left mouse button
             var mouse = pn.game.relMousePos(event);
-            var ox = mouse.x - mouse.x%64;
-            var oy = mouse.y - mouse.y%64;
-            var col = Math.floor(pn.game.gameCam.sc + mouse.x/64);
-            var row = Math.floor(pn.game.gameCam.sr + mouse.y/64);
-            pn.game.canvas.fillRect(ox,oy,64,64);
+            var offset = new pn.Vector2(mouse.x - mouse.x % TILE_SIZE, mouse.y - mouse.y % TILE_SIZE);
+            pn.game.canvas.fillRect(offset.x ,offset.y, TILE_SIZE, TILE_SIZE);
+
          } else {
             //other event while not clicking left mouse button
             var mouse = pn.game.relMousePos(event);
-            var ox = (mouse.x + Math.abs(pn.game.gameCam.x%64 - 64)) - mouse.x%64;
-            var oy = (mouse.y + Math.abs(pn.game.gameCam.y%64 - 64)) - mouse.y%64;
-            var col = Math.floor(pn.game.gameCam.sc + mouse.x/64);
-            var row = Math.floor(pn.game.gameCam.sr + mouse.y/64);
-            pn.game.canvas.strokeRect(ox,oy,64,64); //Draws a rectangular outline
-            //console.log("col: " + col + ", row: " + row);
+            var offset = new pn.Vector2(mouse.x - (mouse.x % TILE_SIZE), mouse.y - (mouse.y % TILE_SIZE));
+            pn.game.canvas.strokeRect(offset.x, offset.y, TILE_SIZE, TILE_SIZE); //Draws a rectangular outline
+
          }
       });
 
@@ -457,8 +469,7 @@ var Game = function () {
 
          pn.game.clicking = false;
          pn.game.dragging = false;
-         pn.game.gameCam.vx = 0;
-         pn.game.gameCam.vy = 0;
+         pn.game.gameCam.setVelocity(0, 0);
       });
       
       // Start the game loop
@@ -467,18 +478,18 @@ var Game = function () {
       // Load the sprite sheet and pass forward the callback.
       SpriteSheet.load(sprites,callback);
 
-      this.board = new GameBoard(); 
       pn.socket.loadMap("World", pn.game.start);
    }
    
    this.loop = function() {
       var dt = 30/1000;
-      for(var i = 0, len = pn.game.screens.length; i < len; i++) {
-         if( pn.game.screens[i]) {
+      for (var i = 0, len = pn.game.screens.length; i < len; i += 1) {
+         if ( pn.game.screens[i]) {
             pn.game.screens[i].update(dt);
             pn.game.screens[i] && pn.game.screens[i].draw(pn.game.canvas);
          }
       }
+      pn.game.gameCam.update();
       setTimeout(pn.game.loop,30);
    }
    
@@ -492,42 +503,42 @@ var Game = function () {
    this.start = function() {      
       pn.socket.addUser('add_player', {player: JSON.stringify(pn.game.player)});
       
-      for(var i= 0; i < 199; i++) {
-         for(var j = 0; j < 199; j++) {
-            var x = (-( 64 + pn.game.gameCam.x%64)) + ((i - pn.game.gameCam.sc) * 64);
-            var y = (-( 64 + pn.game.gameCam.y%64)) + ((j - pn.game.gameCam.sr) * 64);
-            //console.log(i + "i, " + j +"j");
+      for (var i = 0; i < GENERATION.WIDTH; i += 1) {
+         for (var j = 0; j < GENERATION.HEIGHT; j += 1) {
+            var x = (-( TILE_SIZE + (pn.game.gameCam.getPos().x%TILE_SIZE))) + ((i - pn.game.gameCam.getSourceTile().x) * TILE_SIZE);
+            var y = (-( TILE_SIZE + (pn.game.gameCam.getPos().y%TILE_SIZE))) + ((j - pn.game.gameCam.getSourceTile().y) * TILE_SIZE);
+
             pn.game.board.add(new Tile(pn.game.board.map[i][j], x, y, i, j));
             pn.game.counter += 1;
             
-            if (pn.game.board.map[i][j] == 2 && Math.random() > 0.9) {
-               pn.game.board.add(new Tile('tree', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+            if (pn.game.board.map[i][j] == 2 && Math.random() > GENERATION.TREE) {
+               pn.game.board.add(new Tile('tree', x-TILE_SIZE-(Math.random()*TILE_SIZE), y-TILE_SIZE-(Math.random()*TILE_SIZE), i, j));
                pn.game.counter += 1;
-            } else if (pn.game.board.map[i][j] == 2 && Math.random() > 0.9) {
-               pn.game.board.add(new Tile('tree2', x-64-(Math.random()*64), y-64-(Math.random()*64), i, j));
+            } else if (pn.game.board.map[i][j] == 2 && Math.random() > GENERATION.TREE2) {
+               pn.game.board.add(new Tile('tree2', x-TILE_SIZE-(Math.random()*TILE_SIZE), y-TILE_SIZE-(Math.random()*TILE_SIZE), i, j));
                pn.game.counter += 1;
             }
             
-            if (pn.game.board.map[i][j] == 3 && Math.random() > 0.99) {
+            if (pn.game.board.map[i][j] == 3 && Math.random() > GENERATION.BUSH) {
                pn.game.board.add(new Tile('bush', x, y, i, j));
                pn.game.counter += 1;
-            } else if (pn.game.board.map[i][j] == 3 && Math.random() > 0.99) {
+            } else if (pn.game.board.map[i][j] == 3 && Math.random() > GENERATION.BUSH2) {
                pn.game.board.add(new Tile('bush2', x, y, i, j));
                pn.game.counter += 1;
-            } else if (pn.game.board.map[i][j] == 3 && Math.random() > 0.7) {
+            } else if (pn.game.board.map[i][j] == 3 && Math.random() > GENERATION.GRASS) {
                pn.game.board.add(new Tile('grass', x, y, i, j));
                pn.game.counter += 1;
             }
             
-            if (pn.game.board.map[i][j] == 1 && Math.random() > 0.99) {
+            if (pn.game.board.map[i][j] == 1 && Math.random() > GENERATION.ROCK) {
                pn.game.board.add(new Tile('rock', x, y, i, j));
                pn.game.counter += 1;
-            } else if (pn.game.board.map[i][j] == 1 && Math.random() > 0.95) {
+            } else if (pn.game.board.map[i][j] == 1 && Math.random() > GENERATION.ROCK2) {
                pn.game.board.add(new Tile('smallrock', x, y, i, j));
                pn.game.counter += 1;
             }
             
-            if (pn.game.board.map[i][j] == 11 && Math.random() > 0.1) {
+            if (pn.game.board.map[i][j] == 11 && Math.random() > GENERATION.WHEAT) {
                pn.game.board.add(new Tile('wheat', x, y, i, j));
                pn.game.counter += 1;
             }

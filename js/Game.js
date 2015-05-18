@@ -1,92 +1,294 @@
 /**
- * @gloabl
+ * @global
  * @constant {integer} OBJECT_PLAYER
  * @default 1
  */
 var OBJECT_PLAYER = 1,
 /**
- * @gloabl
+ * @global
  * @constant {integer} OBJECT_TILE_COLLIDE
  * @default 2
  */
 OBJECT_TILE_COLLIDE = 2,
 /**
- * @gloabl
+ * @global
  * @constant {integer} OBJECT_TILE_NO_COLLIDE
  * @default 4
  */
 OBJECT_TILE_NO_COLLIDE = 4,
 /**
- * @gloabl
+ * @global
  * @constant {integer} OBJECT_ENEMY_PROJECTILE
  * @default 8
  */
 OBJECT_ENEMY_PROJECTILE = 8,
 /**
- * @gloabl
+ * @global
  * @constant {integer} OBJECT_POWERUP
  * @default 16
  */
 OBJECT_POWERUP = 16,
 /**
- * @gloabl
+ * @global
  * @constant {integer} PLAYER_SIZE
  * @default 32
  */
-PLAYER_SIZE = 32;
+PLAYER_SIZE = 32,
 
 /**
- * Contains the sprite data for the main asset image
+ * Percentages for sprite generation on the map.
+ * @global
+ * @enum {float} GENERATION
+ */
+GENERATION = {
+   TREE:  0.9,
+   TREE2: 0.9,
+   BUSH:  0.99,
+   BUSH2: 0.99,
+   GRASS: 0.7,
+   ROCK:  0.99,
+   ROCK2: 0.95,
+   WHEAT: 0.1
+},
+
+/**
+ * Contains the sprite data for the main asset image.
  * @global
  * @type {object}
  */
-var sprites = { 
+sprites = { 
+  /**
+   * This Map describes the graphical properties of the world map.
+   * @enum
+   * @property
+   */
    map: {
-      32: { sx: 0, sy: 0, w: 64, h: 64, frames: 1 },             // bottomleft_tinroof
-      29: { sx: 64, sy: 0, w: 64, h: 64, frames: 1 },          // bottomright_tinroof
-      19: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 },            // cavefloor
-      4: { sx: 64, sy: 64, w: 64, h: 64, frames: 1 },            // cocaine
-      20: { sx: 128, sy: 0, w: 64, h: 64, frames: 1 },         // concrete
-      5: { sx: 128, sy: 64, w: 64, h: 64, frames: 1 },         // concretebroken
-      25: { sx: 192, sy: 0, w: 64, h: 64, frames: 1 },         // fence_bottomleft
-      26: { sx: 192, sy: 64, w: 64, h: 64, frames: 1 },         // fence_bottomright
-      22: {  sx: 128, sy: 128, w: 64, h: 64, frames: 1 },         // fence_horz
-      23: { sx: 0, sy: 192, w: 64, h: 64, frames: 1 },         // fence_topleft
-      24: { sx: 64, sy: 128, w: 64, h: 64, frames: 1 },         // fence_topright
-      21: { sx: 0, sy: 128, w: 64, h: 64, frames: 1 },         //fence_vert
-      2: { sx: 64, sy: 192, w: 64, h: 64, frames: 1 },         // forest
-      3: { sx: 128, sy: 192, w: 64, h: 64, frames: 1 },         // grass
+      /**
+       * Bottom left tin roof
+       * @inner
+       */
+      32: { sx: 0, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Bottom right tin roof
+       * @inner
+       */
+      29: { sx: 64, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Cave floor
+       * @inner
+       */
+      19: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Cocaine
+       * @inner
+       */
+      4: { sx: 64, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Concrete
+       * @inner
+       */
+      20: { sx: 128, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Broken Concrete
+       * @inner
+       */
+      5: { sx: 128, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Bottom left fence
+       * @inner
+       */
+      25: { sx: 192, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Bottom right fence
+       * @inner
+       */
+      26: { sx: 192, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Horizontal fence
+       * @inner
+       */
+      22: {  sx: 128, sy: 128, w: 64, h: 64, frames: 1 },
+      /**
+       * Top left fence
+       * @inner
+       */
+      23: { sx: 0, sy: 192, w: 64, h: 64, frames: 1 },
+      /**
+       * Top right fence
+       * @inner
+       */
+      24: { sx: 64, sy: 128, w: 64, h: 64, frames: 1 },
+      /**
+       * Vertical fence
+       * @inner
+       */
+      21: { sx: 0, sy: 128, w: 64, h: 64, frames: 1 },
+      /**
+       * Forest
+       * @inner
+       */
+      2: { sx: 64, sy: 192, w: 64, h: 64, frames: 1 },
+      /**
+       * Grass
+       * @inner
+       */
+      3: { sx: 128, sy: 192, w: 64, h: 64, frames: 1 },
+      /**
+       * Horizonal tin roof, ripple in
+       * @inner
+       */
       33: {  sx: 320, sy: 192, w: 64, h: 64, frames: 1 },
-      27: { sx: 192, sy: 128, w: 64, h: 64, frames: 1 },          // , horizontalsection_tinroof
-      18: { sx: 192, sy: 192, w: 64, h: 64, frames: 1 },         // housefloor
-      14: { sx: 256, sy: 0, w: 64, h: 64, frames: 1 },         // lake
-      longgrass: { sx: 320, sy: 0, w: 64, h: 64, frames: 1 },      // longgrass
-      1: { sx: 256, sy: 64, w: 64, h: 64, frames: 1 },         // mountain //was 11
-      15: { sx: 384, sy: 0, w: 64, h: 64, frames: 1 },         // ocean
-      16: { sx: 320, sy: 64, w: 64, h: 64, frames: 1 },         // path
-      11: { sx: 256, sy: 128, w: 64, h: 64, frames: 1 },         //   path2 was 17
-      13: { sx: 320, sy: 128, w: 64, h: 64, frames: 1 },         // pebel
+      /**
+       * Horizonal tin roof, ripple out
+       * @inner
+       */
+      27: { sx: 192, sy: 128, w: 64, h: 64, frames: 1 },
+      /**
+       * House floor
+       * @inner
+       */
+      18: { sx: 192, sy: 192, w: 64, h: 64, frames: 1 },
+      /**
+       * Lake water
+       * @inner
+       */
+      14: { sx: 256, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Long Grass
+       * @inner
+       */
+      longgrass: { sx: 320, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Mountain stone
+       * @inner
+       */
+      1: { sx: 256, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Ocean Water
+       * @inner
+       */
+      15: { sx: 384, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Basic Path
+       * @inner
+       */
+      16: { sx: 320, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Basic Path 2
+       * @inner
+       */
+      11: { sx: 256, sy: 128, w: 64, h: 64, frames: 1 },
+      /**
+       * Pebels
+       * @inner
+       */
+      13: { sx: 320, sy: 128, w: 64, h: 64, frames: 1 },
+      /**
+       * Playable character
+       * @inner
+       */
       player: { sx: 448, sy: 128, w: 32, h: 32, frames: 1 },
-      deadplayer: { sx: 480, sy: 128, w: 32, h: 32, frames: 1 },   // Player
-      17: { sx: 256, sy: 192, w: 64, h: 64, frames: 1 },         // road
-      12: { sx: 384, sy: 64, w: 64, h: 64, frames: 1 },         // sand
-      31: { sx: 448, sy: 0, w: 64, h: 64, frames: 1 },         // topleft_tinroof
-      30: { sx: 448, sy: 64, w: 64, h: 64, frames: 1 },         // topright_tinroof
+      /**
+       * "Unplayable" character
+       * @inner
+       */
+      deadplayer: { sx: 480, sy: 128, w: 32, h: 32, frames: 1 },
+      /**
+       * Road
+       * @inner
+       */
+      17: { sx: 256, sy: 192, w: 64, h: 64, frames: 1 },
+      /**
+       * Sand
+       * @inner
+       */
+      12: { sx: 384, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Top left tin roof
+       * @inner
+       */
+      31: { sx: 448, sy: 0, w: 64, h: 64, frames: 1 },
+      /**
+       * Top right tin roof
+       * @inner
+       */
+      30: { sx: 448, sy: 64, w: 64, h: 64, frames: 1 },
+      /**
+       * Vertical roof ripple in
+       * @inner
+       */
       34: { sx: 384, sy: 192, w: 64, h: 64, frames: 1 },
-      28: { sx: 384, sy: 128, w: 64, h: 64, frames: 1 },         //verticalsection_tinroof 
+      /**
+       * Vertical roof ripple out
+       * @inner
+       */
+      28: { sx: 384, sy: 128, w: 64, h: 64, frames: 1 },
+      /**
+       * Tree sprite
+       * @inner
+       */
       tree: {sx: 0, sy: 256 , w: 128, h: 128, frames: 1},
+      /**
+       * Tree 2 sprite
+       * @inner
+       */
       tree2: {sx: 0, sy: 384 , w: 128, h: 128, frames: 1},
+      /**
+       * Grass sprite
+       * @inner
+       */
       grass: {sx: 448, sy: 192 , w: 64, h: 64, frames: 1},
+      /**
+       * Bush sprite
+       * @inner
+       */
       bush: {sx: 448, sy: 256 , w: 64, h: 64, frames: 1},
+      /**
+       * Bush 2 sprite
+       * @inner
+       */
       bush2: {sx: 448, sy: 320 , w: 64, h: 64, frames: 1},
+      /**
+       * Rock sprite
+       * @inner
+       */
       rock: {sx: 384, sy: 256 , w: 64, h: 64, frames: 1}, 
+      /**
+       * Small rock sprite
+       * @inner
+       */
       smallrock: {sx: 320, sy: 256 , w: 64, h: 64, frames: 1},
+      /**
+       * Wheat sprite
+       * @inner
+       */
       wheat: {sx: 256, sy: 256 , w: 64, h: 64, frames: 1},
+      /**
+       * Item: Rope sprite
+       * @inner
+       */
       rope: {sx: 128, sy: 256 , w: 64, h: 64, frames: 1},
+      /**
+       * Item: Boots sprite
+       * @inner
+       */
       boots: {sx: 192, sy: 256 , w: 64, h: 64, frames: 1},
+      /**
+       * Item: boat sprite
+       * @inner
+       */
       boat: {sx: 128, sy: 320 , w: 64, h: 64, frames: 1},
+      /**
+       * Item: weapons sprite
+       * @inner
+       */
       weapons: {sx: 192, sy: 320 , w: 64, h: 64, frames: 1}
    },
+  /**
+   * Source image filename
+   * @property
+   * @inner
+   */
    image: 'images/newsprites.png'
 }
 

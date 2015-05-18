@@ -17,10 +17,6 @@ var pn = {
  * @event window:load
  */
 $(window).load(function () {
-   //var database = new Database();
-   //if (database.init()) {
-   //   var serverList = database.getServerList();
-   //}
    pn.socket = new Socket('localhost:9081');
    pn.menu = new Menu();
    pn.menu.initialize(pn.socket);

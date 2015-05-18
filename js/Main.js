@@ -13,10 +13,10 @@ var pn = {
 };
 
 /**
- * When the Document is ready execute javascript initializations
- * @event document:ready
+ * After all assets are download, however executed before AJAX
+ * @event window:load
  */
-$(document).ready(function () {
+$(window).load(function () {
    //var database = new Database();
    //if (database.init()) {
    //   var serverList = database.getServerList();

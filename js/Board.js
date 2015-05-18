@@ -48,6 +48,7 @@ var GameBoard = function () {
    /**
     * Add a new object to the object list
     * @public
+    * @param {Object} obj
     */
    this.add = function (obj) {
       obj.board=this;
@@ -93,18 +94,21 @@ var GameBoard = function () {
    /**
     * Call the same method on all current objects
     * @public
+    * @param {String} funcName
     */
    this.iterate = function (funcName) {
-      var args = Array.prototype.slice.call(arguments,1);
+      var args = Array.prototype.slice.call(arguments, 1);
       for(var i = 0, len = this.objects.length; i < len; i += 1) {
          var obj = this.objects[i];
-         obj[funcName].apply(obj,args)
+         obj[funcName].apply(obj, args)
       }
    };
    
    /**
     * Check that two objects do not overlap
     * @public
+    * @param {Object} o1
+    * @param {Object} o2
     */
    this.overlap = function (o1, o2) {
       return !((o1.y+o1.h-1<o2.y) || (o1.y>o2.y+o2.h-1) ||
@@ -114,6 +118,8 @@ var GameBoard = function () {
    /**
     * Collision event handler
     * @public
+    * @param {Object} obj
+    * @param {String} opposingtype
     */
    this.collide = function (obj, opposingtype) { 
       for(var i = 0, len = this.objects.length; i < len; i += 1) { 
@@ -131,6 +137,7 @@ var GameBoard = function () {
    /**
     * Call update on all objects and then delete any objects that have been marked for removal
     * @public
+    * @param {Number} dt - Detla time for animation timing.
     */
    this.update = function (dt) {
       this.resetObjectsToRemove();
@@ -141,6 +148,7 @@ var GameBoard = function () {
    /**
     * Draw all the objects
     * @public
+    * @param {DOMNode} ctx - Reference to the canvas in the DOM
     */
    this.draw = function (ctx) {
       this.iterate('draw', ctx);

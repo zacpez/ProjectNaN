@@ -74,5 +74,9 @@ pn.Vector2.prototype = {
 	 */
 	dist: function (other) {
 		return Math.sqrt(((this.x-other.x)*(this.x-other.x) + (this.y-other.y)*(this.y-other.y)));
+	},
+
+	equals: function (other) {
+		return (this.x === other.x && this.y === other.y);
 	}
 };

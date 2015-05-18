@@ -30,6 +30,8 @@ var Socket = function () {
    
    
    /**
+    * @method
+    * @name initialize
     * The initialize method in the Socket module is similar any other module in the pack. It is to set up data 
     * and methods needed during runtime. In this instance a new socket is created to manage websocket messages. 
     * For each connection to the server a series of events are defined to manage the menu, game server rooms, 
@@ -209,6 +211,8 @@ var Socket = function () {
    };
    
    /**
+    * @method
+    * @name getFile
 	* @param {string} filename filename is a string of a requested file using socket.io as the medium.
 	* @returns {string|undefined} contents of the requested file, otherwise returns undefined if the 
 	* files doesn't exist
@@ -226,6 +230,8 @@ var Socket = function () {
    };
 
    /**
+    * @method
+    * @name toString
     * @returns {string} this methods returns a stringified version on this object.
     */
    this.toString = function (){

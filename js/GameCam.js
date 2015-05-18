@@ -68,8 +68,8 @@ pn.GameCam.prototype = {
 	 * Set start row and start column to render
 	 * @method setSourceTile
 	 */
-	setSourceTile: function (sr, sc) {
-		this.sourceTile.set(sr, sc);
+	setSourceTile: function (sc, sr) {
+		this.sourceTile.set(sr, sr);
 	},
 
 	/**
@@ -113,5 +113,9 @@ pn.GameCam.prototype = {
 	 */
 	getVelocity: function () {
 		return this.velocity;
+	},
+
+	update: function () {
+         this.position.add(this.velocity.x, this.velocity.y);
 	}
 };

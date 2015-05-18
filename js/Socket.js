@@ -221,7 +221,7 @@ var Socket = function (host) {
       }
    }
 
-   /**
+    /**
 	 * @event socket:added_user
 	 * @param {object} user
 	 */
@@ -306,7 +306,7 @@ var Socket = function (host) {
    
    });
 	
-   /**
+    /**
 	 * @event socket:moved_character
 	 * @param {object} user
 	 */

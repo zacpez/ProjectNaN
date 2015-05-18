@@ -13,9 +13,9 @@ var io = require('socket.io'),
 var Socket = function () {
 	
    /**
-    * Used in the event handlers when disassociated from this Socket object
+    * Used in the event handlers when disassociated from this Socket object. Self reference where 'this' isn't possible.
     * @private
-    * @type {object} self reference where 'this' isn't possible.
+    * @type {object} 
     * @todo rewrite in a way that this variable is no longer needed, if possible.
     */
    var self = this;

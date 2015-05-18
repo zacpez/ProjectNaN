@@ -3,7 +3,7 @@ fs = require('fs'),
 path = require('path');
 
 /**
- * 
+ * @constant
  */
 var extensions = {
         '.js': 'text/javascript',
@@ -31,15 +31,15 @@ var HttpService = function (){
 
    this.http;
    /**
-    * Each system may have different ranges and limits to port use, contact system administrator or consult 
+    * Each system may have different ranges and limits to port use, contact system administrator or consult. Simply stores the port number to be set or read.
     * your router for this information.
-    * @type {number} simply stores the port number to be set or read
+    * @type {number} 
     */
    this.port = 80;
    /**
-    * The host variable is used to define the scope of access to the server. '0.0.0.0' is used for World 
+    * The host variable is used to define the scope of access to the server. '0.0.0.0' is used for World. Simple string that is set to start the server in define.
     * Wide Web, '127.0.0.1' is for Local Area Network.
-    * @type {string} simple string that is set to start the server in define 
+    * @type {string} 
     */
    this.host = '0.0.0.0';
 

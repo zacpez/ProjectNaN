@@ -13,9 +13,10 @@ var pn = {
 };
 
 /**
- * @event window:load
+ * When the Document is ready execute javascript initializations
+ * @event document:ready
  */
-$(window).load(function () {
+$(document).ready(function () {
    //var database = new Database();
    //if (database.init()) {
    //   var serverList = database.getServerList();

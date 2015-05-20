@@ -110,23 +110,23 @@ function Menu() {
     * @public
     */
    this.initialize = function () {
-      currPage = this.Page1;
+      currPage = this.GameScreen;
       var self = this;
       
       // Overall Pages
       this.ServerBrowser.css({display: "none"});
       this.HighScores.css({display: "none"});
-      this.GameScreen.css({display: "none"});
-      this.loginDiv.css({display: "block"});
+      this.GameScreen.css({display: "block"});
+      this.loginDiv.css({display: "none"});
 
       // Login Subsections
-      this.Page1.css({display: "block"});
+      this.Page1.css({display: "none"});
       this.Page2.css({display: "none"});
       this.Page3.css({display: "none"});
       this.Page4.css({display: "none"});
 
       // Serer Broswer Subsections
-      this.SBR.css({display: "block"});
+      this.SBR.css({display: "none"});
       this.ServerList.css({display: "none"});
       this.ServerSub.css({display: "none"});
       this.JoinHighlighted.css({display: "none"});

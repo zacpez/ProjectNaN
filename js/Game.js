@@ -56,8 +56,8 @@ EDGE_BUFFER = 2,
 GENERATION = {
    WIDTH: 199,
    HEIGHT: 199,
-   TREE:  0.9,
-   TREE2: 0.9,
+   TREE:  0.85,
+   TREE2: 0.85,
    BUSH:  0.99,
    BUSH2: 0.99,
    GRASS: 0.7,
@@ -451,7 +451,7 @@ var Game = function () {
 
          } else {
             //other event while not clicking left mouse button
-            var mouse = pn.game.relMousePos(event);
+            //var mouse = pn.game.relMousePos(event);
             var offset = new pn.Vector2(mouse.x - (mouse.x % TILE_SIZE), mouse.y - (mouse.y % TILE_SIZE));
             pn.game.canvas.strokeRect(offset.x, offset.y, TILE_SIZE, TILE_SIZE); //Draws a rectangular outline
 
@@ -544,9 +544,8 @@ var Game = function () {
             }
          }
       }
-      console.log(pn.game.counter);
-      pn.game.setScreen(5, pn.game.board); 
-      pn.game.messages.add(new TitleScreen("Project NaN", "Left click to start playing", pn.game.play));   
+      var title = new TitleScreen("Project NaN", "Left click to start playing", pn.game.play(title));
+      pn.game.messages.add(title);   
       pn.game.setScreen(30, pn.game.messages);
    }
 };

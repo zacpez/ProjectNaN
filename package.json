@@ -1,0 +1,17 @@
+{
+    "name": "Project NaN",
+    "version": "0.1.1",
+    "description": "",
+    "author": "Zac Pez <zac@zaqcpez.com>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zacpez/ProjectNaN"
+    },
+    "bugs": {
+        "url": "https://github.com/zacpez/ProjectNaN/issues"
+    },
+    "dependencies": {
+        "socket.io": "^2.3.0"
+    },
+    "private": true
+}

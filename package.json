@@ -1,8 +1,8 @@
 {
-    "name": "Project NaN",
-    "version": "0.1.1",
+    "name": "ProjectNaN",
+    "version": "0.2.0",
     "description": "",
-    "author": "Zac Pez <zac@zaqcpez.com>",
+    "author": "Zac Pez <zac@zacpez.com>",
     "repository": {
         "type": "git",
         "url": "https://github.com/zacpez/ProjectNaN"

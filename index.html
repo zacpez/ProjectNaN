@@ -8,16 +8,16 @@
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
    <script src="/socket.io/socket.io.js"> </script>
-   <script src='js/Player.js'>            </script>   
+   <script src='js/Player.js'>            </script>
    <script src='js/Menu.js'>              </script>
    <script src='js/Tile.js'>              </script>
    <script src='js/Titlescreen.js'>       </script>
    <script src='js/Board.js'>             </script>
    <script src='js/Login.js'>             </script>
    <script src='js/Spritesheet.js'>       </script>
-   <script src='js/Renderer.js'>          </script>      
+   <script src='js/Renderer.js'>          </script>
    <script src='js/Localstorage.js'>      </script>
-   <script src='js/Socket.js'>            </script>   
+   <script src='js/Socket.js'>            </script>
    <script src='js/Game.js'>              </script>
    <script src='js/Localstorage.js'>      </script>
    <script src='js/Main.js'>              </script>
@@ -28,18 +28,18 @@
 
 <!--   THE FIRST SET OF PAGES USED TO IDENTIFY A PLAYER    -->
    <div id="loginpages">
-   
+
 <!--   Page gives the user a choice weather he's played here before   -->
       <section id="page1">
          <h1>Login</h1>
          <a id="newUser" class="button" href="#">
-            <span >New User</span>
+            <span>New User</span>
          </a>
          <a id="existingUser" class="button" href="#">
-            <span >Existing User</span>
+            <span>Existing User</span>
          </a>
       </section>
-      
+
 <!--   Gather the data needed to make a new account for the user   -->
       <section id="page2">
          <h1>Enter your username and email to play</h1>
@@ -49,11 +49,11 @@
          <input type="text" id="newemail" class="textfield"><br />
          <br>
          <a id="login" class="button" href="#">
-            <span >Login</span>
+            <span>Login</span>
          </a>
          <span></span>
       </section>
-      
+
 <!--   Regular user login page   -->
       <section id="page3">
          <h1>Login</h1>
@@ -61,13 +61,13 @@
          <input type="text" id="existuser" class="textfield">
          <br>
          <a id="loginexistuser" class="button" href="#">
-            <span >Login</span>
+            <span>Login</span>
          </a>
          <a id="forgot" class="button" href="#">
-            <span >Forgot User</span>
+            <span>Forgot User</span>
          </a>
       </section>
-      
+
 <!--  Page that will send an email back to the user with there account information  -->
       <section id="page4">
          <h1>Enter your email address to recover your usename</h1>
@@ -75,26 +75,26 @@
          <input type="text" id="email" class="textfield">
          <br>
          <a id="recover" class="button" href="#">
-            <span >Recover Username</span>
+            <span>Recover Username</span>
          </a>
       </section>
-      
+
    </div>
-   
+
 <!--   Server selction of creation options  -->
    <div id="serverbrowser">
-   
+
 <!--   Selection for the user to create of join games   -->
       <section id="serverbrowserroot">
          <h1>Server Browser</h1>
          <a id="newserver" class="button" href="#">
-            <span >Create Server</span>
+            <span>Create Server</span>
          </a>
          <a id="existservers" class="button" href="#">
-            <span >Get Server List</span>
+            <span>Get Server List</span>
          </a>
       </section>
-      
+
 <!--    Server creation page for user to customize their game   -->
       <section id="serversubmission">
          <h1>Create Server</h1>
@@ -127,7 +127,7 @@
             <option value="char3">8 Characters</option>
          </select><br />
          <a id="addserver" class="button" href="#">
-            <span >Submit Server</span>
+            <span>Submit Server</span>
          </a>
       </section>
       <section id="serverlist">
@@ -135,14 +135,14 @@
             <thead><tr><th id="serverdisplayname">Server</th><th id="mapdisplaytype">Map</th><th id="mapdisplaysize">Map Size</th><th id="serverdisplayplayers">Players</th><th id="serverdisplaystatus">Status</th></tr></thead>
          </table>
          <a id="joinhighlighted" class="button" href="#">
-            <span >Join Server</span>
+            <span>Join Server</span>
          </a>
       </section>
-      
+
 <!-- -->
    </div>
-   
-   
+
+
    <div id="highscores"></div>
    <div id="gamearea">
       <canvas id="gamescreen">HTML5 canvas not supported by browser.</canvas>
